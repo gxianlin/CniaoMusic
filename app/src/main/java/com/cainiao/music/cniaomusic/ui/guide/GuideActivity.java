@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-import static android.R.attr.id;
-
 /**
  * 功能：视频引导页
  * 作者:gong.xl
@@ -57,6 +55,7 @@ public class GuideActivity extends BaseAvtivity {
         btStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //跳转页面
                 startToActivity(MainActivity.class);
                 finish();
             }
