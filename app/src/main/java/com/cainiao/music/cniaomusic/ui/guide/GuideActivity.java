@@ -63,7 +63,8 @@ public class GuideActivity extends BaseAvtivity {
     }
 
     private void initViews() {
-        vp.setOffscreenPageLimit(3);
+        //设置viewpager缓存个数
+        vp.setOffscreenPageLimit(2);
         vp.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
         vp.addOnPageChangeListener(new MyPagerListener());
     }
@@ -93,6 +94,9 @@ public class GuideActivity extends BaseAvtivity {
         fragments.add(fragment3);
     }
 
+    /**
+     * viewpager页面适配器
+     */
     public class MyPagerAdapter extends FragmentPagerAdapter{
 
         public MyPagerAdapter(FragmentManager fm) {
@@ -110,6 +114,9 @@ public class GuideActivity extends BaseAvtivity {
         }
     }
 
+    /**
+     * viewpager滑动监听事件
+     */
     public class MyPagerListener implements ViewPager.OnPageChangeListener{
 
         @Override

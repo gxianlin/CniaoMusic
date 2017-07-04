@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">CniaoMusic</string>
+    <string name="app_name">菜鸟音乐</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

@@ -10,7 +10,12 @@ import android.view.View;
 
 
 /**
- * 所有activity的基类
+ * 描述：所有activity的基类
+ * 作者：gong.xl
+ * 创建日期：2017/7/3 下午10:43
+ * 修改日期: 2017/7/3
+ * 修改备注：
+ * 邮箱：gxianlin@126.com
  */
 public class BaseAvtivity extends AppCompatActivity{
 
@@ -20,6 +25,12 @@ public class BaseAvtivity extends AppCompatActivity{
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
+    /**
+     * 显示Snackbar
+     *
+     * @param view
+     * @param text
+     */
     public void showSnackBar(View view,@Nullable String text){
         Snackbar.make(view,text, Snackbar.LENGTH_SHORT).show();
     }

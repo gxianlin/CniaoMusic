@@ -27,24 +27,35 @@ public class GuideFragment extends LoadFragment {
     protected void stopLoad() {
         super.stopLoad();
         if (customView != null) {
-            customView.stopPlayback();
+            customView.pause();
         }
     }
 
     @Override
     protected void lazyLoadData() {
-        customView = findView(R.id.cv);
-        int index = getArguments().getInt("index");
-        Uri uri;
-        if (index == 1) {
-            //获取视频路径
-            uri = Uri.parse("android.resource://" + getActivity().getPackageName() + "/" + R.raw.guide_1);
-        } else if (index == 2) {
-            uri = Uri.parse("android.resource://" + getActivity().getPackageName() + "/" + R.raw.guide_2);
-        } else {
-            uri = Uri.parse("android.resource://" + getActivity().getPackageName() + "/" + R.raw.guide_3);
+        if (customView == null) {
+            customView = findView(R.id.cv);
+            int index = getArguments().getInt("index");
+            Uri uri;
+            if (index == 1) {
+                //获取视频路径
+                uri = Uri.parse("android.resource://" + getActivity().getPackageName() + "/" + R.raw.guide_1);
+            } else if (index == 2) {
+                uri = Uri.parse("android.resource://" + getActivity().getPackageName() + "/" + R.raw.guide_2);
+            } else {
+                uri = Uri.parse("android.resource://" + getActivity().getPackageName() + "/" + R.raw.guide_3);
+            }
+            customView.playVideo(uri);
+        }else {
+            customView.start();
         }
-        customView.playVideo(uri);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (customView != null){
+            customView.stopPlayback();
+        }
+    }
 }
