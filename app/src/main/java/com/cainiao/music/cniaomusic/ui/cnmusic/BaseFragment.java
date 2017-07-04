@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 /**
  * 功能：所有fragment的基类
  * 1.包含懒加载模式
- *
+ * <p>
  * 作者:gong.xl
  * 邮箱:gxianlin@126.com
  * 创建时间:2017/7/4 12:05
@@ -69,7 +69,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     /**
      * 用于接收参数
      */
-    protected void receiveData(){
+    protected void receiveData() {
 
     }
 
