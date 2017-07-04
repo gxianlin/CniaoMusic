@@ -1,7 +1,8 @@
 package com.cainiao.music.cniaomusic;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.cainiao.music.cniaomusic.ui.cnmusic.BaseAvtivity;
 
 /**
  * 功能：主页面
@@ -9,7 +10,7 @@ import android.os.Bundle;
  * 邮箱:gxianlin@126.com
  * 创建时间:2017/7/3
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseAvtivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
