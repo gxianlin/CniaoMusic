@@ -1,6 +1,6 @@
 package com.cainiao.music.cniaomusic;
 
-import android.os.Bundle;
+import android.view.View;
 
 import com.cainiao.music.cniaomusic.ui.cnmusic.BaseAvtivity;
 
@@ -13,8 +13,27 @@ import com.cainiao.music.cniaomusic.ui.cnmusic.BaseAvtivity;
 public class MainActivity extends BaseAvtivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    public int getLayoutId() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    public void initViews() {
+
+    }
+
+    @Override
+    public void setListener() {
+
+    }
+
+    @Override
+    public void initData() {
+
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 }

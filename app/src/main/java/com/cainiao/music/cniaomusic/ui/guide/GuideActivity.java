@@ -38,66 +38,63 @@ public class GuideActivity extends BaseAvtivity {
     Button btStart;
     private ArrayList<Fragment> fragments;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_guide);
-        ButterKnife.inject(this);
-        initData();
-        initViews();
-        setListener();
-    }
 
     /**
      * 设置监听事件
      */
-    private void setListener() {
-        btStart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //跳转页面
-                startToActivity(MainActivity.class);
-                finish();
-            }
-        });
+    public void setListener() {
+        setOnClick(btStart);
     }
 
-    private void initViews() {
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_guide;
+    }
+
+    @Override
+    public void initViews() {
+        ButterKnife.inject(this);
+    }
+
+    @Override
+    public void initData() {
+        fragments = new ArrayList<>();
+
+        GuideFragment fragment1 = new GuideFragment();
+        Bundle bundle1 = new Bundle();
+        bundle1.putInt("index", 1);
+        fragment1.setArguments(bundle1);
+        fragments.add(fragment1);
+
+        GuideFragment fragment2 = new GuideFragment();
+        Bundle bundle2 = new Bundle();
+        bundle2.putInt("index", 2);
+        fragment2.setArguments(bundle2);
+        fragments.add(fragment2);
+
+        GuideFragment fragment3 = new GuideFragment();
+        Bundle bundle3 = new Bundle();
+        bundle3.putInt("index", 3);
+        fragment3.setArguments(bundle3);
+        fragments.add(fragment3);
+
         //设置viewpager缓存个数
         vp.setOffscreenPageLimit(2);
         vp.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
         vp.addOnPageChangeListener(new MyPagerListener());
     }
 
-    /**
-     * 初始化数据，添加三个fragment
-     */
-    private void initData(){
-        fragments = new ArrayList<>();
-
-        GuideFragment fragment1 = new GuideFragment();
-        Bundle bundle1 = new Bundle();
-        bundle1.putInt("index",1);
-        fragment1.setArguments(bundle1);
-        fragments.add(fragment1);
-
-        GuideFragment fragment2 = new GuideFragment();
-        Bundle bundle2 = new Bundle();
-        bundle2.putInt("index",2);
-        fragment2.setArguments(bundle2);
-        fragments.add(fragment2);
-
-        GuideFragment fragment3 = new GuideFragment();
-        Bundle bundle3 = new Bundle();
-        bundle3.putInt("index",3);
-        fragment3.setArguments(bundle3);
-        fragments.add(fragment3);
+    @Override
+    public void onClick(View v) {
+        //跳转页面
+        startToActivity(MainActivity.class);
+        finish();
     }
 
     /**
      * viewpager页面适配器
      */
-    public class MyPagerAdapter extends FragmentPagerAdapter{
+    public class MyPagerAdapter extends FragmentPagerAdapter {
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -117,7 +114,7 @@ public class GuideActivity extends BaseAvtivity {
     /**
      * viewpager滑动监听事件
      */
-    public class MyPagerListener implements ViewPager.OnPageChangeListener{
+    public class MyPagerListener implements ViewPager.OnPageChangeListener {
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -126,6 +123,7 @@ public class GuideActivity extends BaseAvtivity {
 
         /**
          * 切换下标点
+         *
          * @param position
          */
         @Override
@@ -135,11 +133,11 @@ public class GuideActivity extends BaseAvtivity {
             iv2.setImageResource(R.mipmap.dot_normal);
             iv3.setImageResource(R.mipmap.dot_normal);
 
-            if (position == 0){
+            if (position == 0) {
                 iv1.setImageResource(R.mipmap.dot_focus);
-            }else if(position == 1){
+            } else if (position == 1) {
                 iv2.setImageResource(R.mipmap.dot_focus);
-            }else{
+            } else {
                 iv3.setImageResource(R.mipmap.dot_focus);
                 btStart.setVisibility(View.VISIBLE);
             }
