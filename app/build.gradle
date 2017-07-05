@@ -32,5 +32,6 @@ dependencies {
     compile 'com.android.support:design:25.2.0'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.jakewharton:butterknife:5.1.1'
+    compile 'com.lapism:searchview:3.8'
     testCompile 'junit:junit:4.12'
 }

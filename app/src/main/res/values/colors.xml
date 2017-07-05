@@ -1,10 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <color name="colorPrimary">#a21609</color>
+    <color name="colorPrimaryDark">#6c090b</color>
+    <color name="colorPrimaryWhite">#00000000</color>
+    <color name="colorAccent">#a21609</color>
+
+    <color name="text_shadow">#7F000000</color>
+    <color name="background">#fffafafa</color>
+    <color name="window_background">#FFF5F5F5</color>
+    <color name="transfer">#00000000</color>
+    <color name="progressBackgroundColorLight">#33000000</color>
+
+    <!-- 常用颜色 -->
+    <color name="black">#000000</color>
+    <color name="black_alpha">#8A000000</color>
+    <color name="black_alpha_more">#64000000</color>
+    <color name="black_normal">#DE000000</color>
+    <color name="white_alpha">#8AFFFFFF</color>
+    <color name="white_normal">#DEFFFFFF</color>
+    <color name="grey">#cccccc</color>
+    <color name="grey_alpha">#8Acccccc</color>
+
+    <color name="login_alpha">#D52A2F</color>
+    <color name="register_alpha">#D52A2F</color>
+
     <color name="white_text">#fafafa</color>
 
     <!-- notification text -->
-
-
     <color name="bottom_text">#c1c0c0</color>
 
     <color name="notification_bak">#47fafafa</color>

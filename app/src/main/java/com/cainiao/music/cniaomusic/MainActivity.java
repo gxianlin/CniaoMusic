@@ -1,25 +1,31 @@
 package com.cainiao.music.cniaomusic;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.cainiao.music.cniaomusic.ui.album.AlbumFragment;
-import com.cainiao.music.cniaomusic.ui.cnmusic.BaseAvtivity;
+import com.cainiao.music.cniaomusic.ui.cnmusic.SearchActivity;
 import com.cainiao.music.cniaomusic.ui.radio.RadioFragment;
 
 import java.util.ArrayList;
@@ -35,7 +41,7 @@ import magicasakura.widgets.TintToolbar;
  * 邮箱:gxianlin@126.com
  * 创建时间:2017/7/3
  */
-public class MainActivity extends BaseAvtivity {
+public class MainActivity extends SearchActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @InjectView(R.id.bar_net)
     ImageView mBarNet;
@@ -53,12 +59,13 @@ public class MainActivity extends BaseAvtivity {
     FrameLayout mBottomContainer;
     @InjectView(R.id.a)
     RelativeLayout mA;
-    @InjectView(R.id.id_lv_left_menu)
-    ListView mIdLvLeftMenu;
+    @InjectView(R.id.navigation)
+    NavigationView navigationView;
     @InjectView(R.id.drawerLayout)
     DrawerLayout mDrawerLayout;
     @InjectView(R.id.bar_menu)
     ImageView mBarMenu;
+
 
     private ActionBar mActionBar;
     private ArrayList<ImageView> tabs = new ArrayList<>();
@@ -73,8 +80,9 @@ public class MainActivity extends BaseAvtivity {
     @Override
     public void initViews() {
         ButterKnife.inject(this);
-        setToolBar();
-        setDrawerLayout();
+//        setToolBar();
+        initToolbar();
+        initDrawer();
     }
 
     @Override
@@ -90,7 +98,6 @@ public class MainActivity extends BaseAvtivity {
                 //切换tab标签
                 changeTabs(position);
             }
-
 
             @Override
             public void onPageScrollStateChanged(int state) {
@@ -125,6 +132,17 @@ public class MainActivity extends BaseAvtivity {
         mActionBar = getSupportActionBar();
         mActionBar.setDisplayUseLogoEnabled(false);
         mActionBar.setDisplayShowTitleEnabled(false);
+    }
+    /***
+     * 初始化toolbar
+     */
+    private void initToolbar() {
+        mToolbar.setNavigationIcon(R.drawable.ic_drawer_home);
+        mToolbar.setContentInsetsAbsolute(0, 0);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
     }
 
     /**
@@ -168,26 +186,37 @@ public class MainActivity extends BaseAvtivity {
         }
     }
 
-    /**
+    /***
      * 初始化侧滑菜单
      */
-    private void setDrawerLayout() {
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View drawerView = inflater.inflate(R.layout.nav_header_main, null);
-        mIdLvLeftMenu.addHeaderView(drawerView);
-        mIdLvLeftMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    private void initDrawer() {
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout
+                , R.string.open_string, R.string.close_string){
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case 1:
-                        break;
-                    case 2:
-                        break;
-                    default:
-                        break;
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                if(searchView != null && searchView.isSearchOpen()){
+                    searchView.close(true);
                 }
             }
-        });
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+
+            }
+        };
+
+        toggle.syncState();
+        mDrawerLayout.addDrawerListener(toggle);
+//        navigationView.setNavigationItemSelectedListener(this);
+
+//        avatar = (CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.drawer_avatar);
+//        nicknameTv = (TextView) navigationView.getHeaderView(0).findViewById(R.id.drawer_nickname);
+//        aboutTv = (TextView) navigationView.getHeaderView(0).findViewById(R.id.drawer_about);
+//
+//        avatar.setOnClickListener(this);
+
     }
 
     /**
@@ -212,6 +241,48 @@ public class MainActivity extends BaseAvtivity {
         } else {
             return super.onKeyDown(keyCode, event);
         }
+    }
+
+    @Override
+    public void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        initSearch();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_beats,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.action_search){
+            searchView.open(true);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void initSearch() {
+        setSearchView();
+        customSearchView(true);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.nav_library){
+            //跳转到本地歌曲的界面
+//            startToActivity(LocalMusicActivity.class);
+        }
+
+        //关闭侧滑栏
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     class MyPagerAdapter extends FragmentPagerAdapter {

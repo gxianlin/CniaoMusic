@@ -22,6 +22,8 @@
         <activity
             android:name=".ui.guide.GuideActivity"
             android:launchMode="singleTask"/>
+        <activity android:name=".ui.cnmusic.SearchActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -2,12 +2,209 @@
     <string name="app_name">菜鸟音乐</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_main2">Main2Activity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="title_activity_base">BaseActivity</string>
     <string name="action_settings">Settings</string>
+    <string name="copyright">Copyright© 2016 cpacm</string>
+    <string name="title_activity_beats">BeatsActivity</string>
+    <string name="title_activity_login">登录</string>
 
+    <!-- 权限 -->
+    <string name="permission_storage_rationale">允许该权限可以让你下载萌否的歌曲资源</string>
+    <string name="permission_storage_rationale_again">拒绝改该权限你将不能下载任何歌曲，想要恢复请去设置中心打开权限</string>
+    <string name="permission_storage_denied">你没有权限下载歌曲,请前往设置中心打开权限</string>
+
+    <string name="permission_record_rationale">允许该权限可以给你炫酷的播放特效</string>
+    <string name="permission_record_rationale_again">拒绝改该权限你将无法看到炫酷的播放特效</string>
+    <string name="permission_record_denied">你已拒绝该权限,请前往设置中心打开权限</string>
+
+    <!-- 主页面 beats -->
+    <string name="open_string">miao~</string>
+    <string name="close_string">moe~</string>
+    <string name="music_find">开始聆听</string>
+    <string name="search_hint">搜索专辑/电台</string>
+    <string name="search_result_title">搜索结果</string>
+    <string name="search_format_title">“%1$s”的搜索结果</string>
+    <!--<string name="load_fail">声は届けない</string>-->
+
+    <!-- menu -->
+    <string name="menu_register">菜鸟音乐注册</string>
+
+    <string name="menu_search">搜索</string>
+
+    <string name="menu_test">添加子项</string>
+    <string name="menu_playing">正在播放</string>
+    <string name="menu_playlist">播放列表</string>
+    <string name="menu_download">下载管理</string>
+    <string name="menu_local">本地歌曲</string>
+    <string name="menu_setting">设置</string>
+    <string name="menu_about">关于</string>
+    <string name="menu_feedback">问题反馈</string>
+
+    <string name="menu_song_play">播放</string>
+    <string name="menu_song_addto_playlist">添加到播放列表</string>
+    <string name="menu_song_addto_fav">添加到收藏夹</string>
+    <string name="menu_song_goto_parent">专辑详情</string>
+    <string name="menu_song_download">下载</string>
+    <string name="menu_song_delete">删除</string>
+
+    <string name="menu_collection_edit">编辑收藏夹信息</string>
+    <string name="menu_collection_delete">删除收藏夹</string>
+
+    <string name="menu_favourite_all">全部</string>
+    <string name="menu_favourite_album">专辑</string>
+    <string name="menu_favourite_radio">电台</string>
+
+    <string name="menu_clearall">清空播放列表</string>
+
+    <string name="menu_collection_store">保存</string>
+
+
+    <!--################## 通用 ####################-->
+    <string name="fav">收藏</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确定</string>
+    <string name="evaluation">评价</string>
+    <string name="song">%1$d首</string>
+
+
+    <!--################## 下载管理 ####################-->
+    <string name="download_manager">下载管理</string>
+    <string name="song_download_fail">歌曲信息缺失，无法下载</string>
+    <string name="song_add_download">已添加到下载列表</string>
+    <string name="song_add_playlist">已添加到播放列表</string>
+    <string name="song_downloading">歌曲开始下载中</string>
+    <string name="song_download_disable">当前无可用网络</string>
+    <string name="song_download_wifi">请在wifi环境下下载歌曲</string>
+    <string name="song_download_complete">歌曲已经下载完成</string>
+
+    <string name="downloading_fragment_title">下载中</string>
+    <string name="downloaded_fragment_title">下载完成</string>
+    <string name="download_dialog_title">删除歌曲</string>
+    <string name="download_dialog_description">确定要删除吗？</string>
+
+    <!--################## 本地歌曲 ####################-->
+    <string name="local_library">本地歌曲</string>
+    <string name="local_music_fragment_title">歌曲</string>
+    <string name="local_album_fragment_title">专辑</string>
+    <string name="local_artist_fragment_title">艺术家</string>
+
+    <!--################## 登录界面 ####################-->
+    <string name="login_user">用户名/邮箱</string>
+    <string name="login_password">密码</string>
+    <string name="login">登录</string>
+    <string name="login_fail">登录失败</string>
+    <string name="login_oauth">手动登录</string>
+    <string name="account_empty">请输入你的账户</string>
+    <string name="password_empty">请输入你的密码</string>
+    <string name="loading_more">正在加载中</string>
+
+    <!--################## 主界面 ####################-->
+    <string name="drawer_nickname">你瞅啥</string>
+    <string name="drawer_about">天涯何处无芳草,何必非在身边找,况且质量还不好!</string>
+
+    <!--################## 播放列表 ####################-->
+    <string name="playlist">播放列表</string>
+    <string name="playlist_dialog_title">清空列表</string>
+    <string name="playlist_dialog_description">确定要清空播放列表吗？</string>
+
+    <!--################## 歌单分类 ####################-->
+    <string name="collect">歌单</string>
+    <string name="collect_recently_title">最近播放</string>
+    <string name="collect_album_title">我的收藏</string>
+    <string name="collect_title">我的收藏夹</string>
+    <string name="collection_create">创建你的收藏夹</string>
+    <string name="collection_create_title">新建收藏夹</string>
+    <string name="collection_title_default">默认收藏夹</string>
+    <string name="collection_edit_title">编辑收藏夹</string>
+    <string name="collection_edit_name">名称</string>
+    <string name="collection_edit_content">收藏夹标题</string>
+    <string name="collection_edit_cover">封面</string>
+    <string name="collection_edit_hint">暂无描述</string>
+    <string name="collection_edit_cover_small">图像太小</string>
+    <string name="collection_edit_store">保存完毕</string>
+    <string name="collection_dialog_cover_title">更换封面</string>
+    <string name="collection_dialog_selection_title">选择你的收藏夹</string>
+    <string name="collection_dialog_name">收藏夹名称</string>
+    <string name="collection_dialog_update_title">收藏夹</string>
+    <string name="collection_dialog_update_content">要保存更改的内容吗</string>
+
+    <string name="collect_song_success">歌曲收藏成功</string>
+    <string name="collect_song_fail">歌曲收藏失败</string>
+
+
+    <!--################## 音乐专辑分类 ####################-->
+    <string name="album">专辑</string>
+    <string name="album_new_title">新曲速递</string>
+    <string name="album_new_subtitle">NEW ALBUM</string>
+    <string name="album_hot_title">音乐热榜</string>
+    <string name="album_hot_subtitle">HOT ALBUM</string>
+
+    <!--################## 音乐电台分类 ####################-->
+    <string name="radio">电台</string>
+    <string name="radio_new_title">最新电台</string>
+    <string name="radio_new_subtitle">NEW RADIO</string>
+    <string name="radio_hot_title">流行电台</string>
+    <string name="radio_hot_subtitle">POPULAR</string>
+
+    <!--################## 播放详情页 ####################-->
+    <string name="music_fav">收藏专题,并对其进行评价吧！</string>
+    <string name="music_unfav">确定取消收藏吗？</string>
+    <string name="music_share_cover">share_cover</string>
+    <string name="music_more">MORE</string>
+    <string name="music_message_error">歌曲信息错误</string>
+    <string name="music_more_title">更多</string>
+    <string name="music_player">音乐播放器</string>
+    <string name="music_mode_single">单曲播放</string>
+    <string name="music_mode_random">随机播放</string>
+    <string name="music_mode_cycle">循环播放</string>
+    <string name="music_playing_none">没有正在播放的歌曲</string>
+    <string name="music_explore_title">发现歌曲</string>
+    <string name="music_explore_wait">正在为你搜索歌曲,请稍候…</string>
+    <string name="music_explore_fail">获取歌曲失败,请重试…</string>
+    <string name="music_playlist_next_null">没有正在播放的歌曲队列</string>
+    <string name="music_unknown">unknown</string>
+    <string name="music_playlist_album_fail">无法获取歌曲专辑信息</string>
+    <string name="music_playlist_album">正在获取专辑信息…</string>
+
+    <string name="music_previous">上一首</string>
+    <string name="music_play">播放</string>
+    <string name="music_next">下一首</string>
+    <string name="music_pause">暂停</string>
+
+    <!--################## 设置 ####################-->
+    <string name="setting">设置</string>
+    <string name="setting_network">网络</string>
+    <string name="setting_wifi">仅WIFI下载歌曲</string>
+    <string name="setting_wifi_subtitle">节省您的流量</string>
+
+    <string name="setting_normal">常规</string>
+    <string name="setting_notify">打开通知栏</string>
+    <string name="setting_notify_subtitle">歌曲播放时打开通知栏</string>
+    <string name="setting_update">检查更新</string>
+    <string name="setting_cache">清除图片缓存</string>
+    <string name="setting_cache_clean">图片缓存清除完毕</string>
+    <string name="setting_update_new">当前为最新客户端</string>
+    <string name="setting_update_title">客户端更新</string>
+    <string name="setting_update_loading">正在为你检查更新中…</string>
+
+    <string name="setting_logout">登出</string>
+    <string name="setting_logout_tip">确定要退出此账号吗？</string>
+
+    <string name="feedback_sendto_mail">mailto:shenliming1013@gmail.com</string>
+    <string name="feedback_title">我要吐槽！</string>
+    <string name="feedback_question">请将在使用客户端时遇到的问题反馈给我，我会及时的更新问题!</string>
+
+    <string name="about_app">一款基于萌否网站 api 的音乐管理软件\n萌否网站：http://moe.fm/\n版本：1.0.0</string>
+    <string name="about_name1">客户端</string>
+    <string name="about_name2">作者</string>
+    <string name="about_author">小K哥</string>
+    <string name="about_me">关注我的公众号:我爱小k哥    里面有视频中提到的免费基础学习视频,同时也会不定期提供最前沿的android资讯</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

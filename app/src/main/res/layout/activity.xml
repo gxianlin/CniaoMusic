@@ -61,6 +61,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"
                 android:layout_centerVertical="true"
+                android:visibility="invisible"
                 android:background="@drawable/actionbar_search" />
         </RelativeLayout>
     </magicasakura.widgets.TintToolbar>

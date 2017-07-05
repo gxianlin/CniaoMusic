@@ -1,4 +1,5 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawerLayout"
     android:background="@color/normalBackground"
     android:layout_width="match_parent"
@@ -8,17 +9,21 @@
         layout="@layout/activity"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-    <ListView
-        android:id="@+id/id_lv_left_menu"
+    <com.lapism.searchview.SearchView
+        android:id="@+id/searchView"
         android:layout_width="match_parent"
+        android:layout_marginTop="27dp"
+        android:layout_height="match_parent"/>
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navigation"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:paddingTop="0dp"
-        android:background="#ffffffff"
-        android:clipToPadding="false"
-        android:divider="@null"
-        android:listSelector="?attr/selectableItemBackground" />
+        android:fitsSystemWindows="true"
+        android:background="@color/normalBackground"
+        app:headerLayout="@layout/home_drawer_header"
+        app:menu="@menu/home_drawer_list">
+    </android.support.design.widget.NavigationView>
 
 
 </android.support.v4.widget.DrawerLayout>
