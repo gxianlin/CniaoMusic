@@ -4,17 +4,17 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import com.cainiao.music.cniaomusic.MainActivity;
 import com.cainiao.music.cniaomusic.R;
 import com.cainiao.music.cniaomusic.ui.cnmusic.BaseAvtivity;
 import com.ilynn.base.PageIndicator;
 import com.ilynn.base.ViewPagerHelper;
-import com.ilynn.base.syle.ElasticCircleNavigator;
+import com.ilynn.base.syle.CircleNavigator;
 
 import java.util.ArrayList;
 
@@ -31,12 +31,6 @@ public class GuideActivity extends BaseAvtivity {
 
     @InjectView(R.id.vp)
     ViewPager vp;
-    @InjectView(R.id.iv1)
-    ImageView iv1;
-    @InjectView(R.id.iv2)
-    ImageView iv2;
-    @InjectView(R.id.iv3)
-    ImageView iv3;
     @InjectView(R.id.bt_start)
     Button btStart;
     @InjectView(R.id.page_indicator)
@@ -88,11 +82,13 @@ public class GuideActivity extends BaseAvtivity {
         vp.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
         vp.addOnPageChangeListener(new MyPagerListener());
 
-        ElasticCircleNavigator elasticCircleNavigator = new ElasticCircleNavigator(this);
+        CircleNavigator elasticCircleNavigator = new CircleNavigator(this);
+
+//        elasticCircleNavigator.setNormaCircleColor(ContextCompat.getColor(this,R.color.theme_color_c2_common_bg));
+        elasticCircleNavigator.setCircleColor(ContextCompat.getColor(this,R.color.themeColor));
         elasticCircleNavigator.setCircleCount(fragments.size());
-        elasticCircleNavigator.setCircleCount(fragments.size());
-        elasticCircleNavigator.setCircleCount(fragments.size());
-        elasticCircleNavigator.setOnCircleClickListener(new ElasticCircleNavigator.OnCircleClickListener() {
+
+        elasticCircleNavigator.setCircleClickListener(new CircleNavigator.OnCircleClickListener() {
             @Override
             public void onClick(int position) {
                 vp.setCurrentItem(position);
@@ -147,16 +143,8 @@ public class GuideActivity extends BaseAvtivity {
         @Override
         public void onPageSelected(int position) {
             btStart.setVisibility(View.GONE);
-            iv1.setImageResource(R.mipmap.dot_normal);
-            iv2.setImageResource(R.mipmap.dot_normal);
-            iv3.setImageResource(R.mipmap.dot_normal);
 
-            if (position == 0) {
-                iv1.setImageResource(R.mipmap.dot_focus);
-            } else if (position == 1) {
-                iv2.setImageResource(R.mipmap.dot_focus);
-            } else {
-                iv3.setImageResource(R.mipmap.dot_focus);
+            if (position == 2) {
                 btStart.setVisibility(View.VISIBLE);
             }
         }
