@@ -2,8 +2,7 @@
     android:id="@+id/drawerLayout"
     android:background="@color/normalBackground"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
 
     <include
         layout="@layout/activity"
@@ -19,7 +18,6 @@
         android:background="#ffffffff"
         android:clipToPadding="false"
         android:divider="@null"
-        android:fitsSystemWindows="true"
         android:listSelector="?attr/selectableItemBackground" />
 
 

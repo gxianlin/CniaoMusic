@@ -12,6 +12,9 @@ import android.widget.ImageView;
 import com.cainiao.music.cniaomusic.MainActivity;
 import com.cainiao.music.cniaomusic.R;
 import com.cainiao.music.cniaomusic.ui.cnmusic.BaseAvtivity;
+import com.ilynn.base.PageIndicator;
+import com.ilynn.base.ViewPagerHelper;
+import com.ilynn.base.syle.ElasticCircleNavigator;
 
 import java.util.ArrayList;
 
@@ -36,6 +39,8 @@ public class GuideActivity extends BaseAvtivity {
     ImageView iv3;
     @InjectView(R.id.bt_start)
     Button btStart;
+    @InjectView(R.id.page_indicator)
+    PageIndicator mPageIndicator;
     private ArrayList<Fragment> fragments;
 
 
@@ -82,6 +87,19 @@ public class GuideActivity extends BaseAvtivity {
         vp.setOffscreenPageLimit(2);
         vp.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
         vp.addOnPageChangeListener(new MyPagerListener());
+
+        ElasticCircleNavigator elasticCircleNavigator = new ElasticCircleNavigator(this);
+        elasticCircleNavigator.setCircleCount(fragments.size());
+        elasticCircleNavigator.setCircleCount(fragments.size());
+        elasticCircleNavigator.setCircleCount(fragments.size());
+        elasticCircleNavigator.setOnCircleClickListener(new ElasticCircleNavigator.OnCircleClickListener() {
+            @Override
+            public void onClick(int position) {
+                vp.setCurrentItem(position);
+            }
+        });
+        mPageIndicator.setPageNavigator(elasticCircleNavigator);
+        ViewPagerHelper.bind(mPageIndicator,vp);
     }
 
     @Override

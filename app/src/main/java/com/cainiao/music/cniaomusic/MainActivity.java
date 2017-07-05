@@ -10,7 +10,6 @@ import android.support.v7.app.ActionBar;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
@@ -22,7 +21,6 @@ import android.widget.Toast;
 import com.cainiao.music.cniaomusic.ui.album.AlbumFragment;
 import com.cainiao.music.cniaomusic.ui.cnmusic.BaseAvtivity;
 import com.cainiao.music.cniaomusic.ui.radio.RadioFragment;
-import com.cainiao.music.cniaomusic.ui.widget.CustomViewPager;
 
 import java.util.ArrayList;
 
@@ -50,7 +48,7 @@ public class MainActivity extends BaseAvtivity {
     @InjectView(R.id.toolbar)
     TintToolbar mToolbar;
     @InjectView(R.id.main_viewpager)
-    CustomViewPager mCustomViewpager;
+    ViewPager mCustomViewpager;
     @InjectView(R.id.bottom_container)
     FrameLayout mBottomContainer;
     @InjectView(R.id.a)
@@ -59,6 +57,8 @@ public class MainActivity extends BaseAvtivity {
     ListView mIdLvLeftMenu;
     @InjectView(R.id.drawerLayout)
     DrawerLayout mDrawerLayout;
+    @InjectView(R.id.bar_menu)
+    ImageView mBarMenu;
 
     private ActionBar mActionBar;
     private ArrayList<ImageView> tabs = new ArrayList<>();
@@ -123,9 +123,8 @@ public class MainActivity extends BaseAvtivity {
     private void setToolBar() {
         setSupportActionBar(mToolbar);
         mActionBar = getSupportActionBar();
-        mActionBar.setDisplayUseLogoEnabled(true);
-        mActionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
-        mActionBar.setTitle("");
+        mActionBar.setDisplayUseLogoEnabled(false);
+        mActionBar.setDisplayShowTitleEnabled(false);
     }
 
     /**
@@ -148,10 +147,12 @@ public class MainActivity extends BaseAvtivity {
         mCustomViewpager.setCurrentItem(1);
     }
 
-
-    @OnClick({R.id.bar_net, R.id.bar_music, R.id.bar_friends, R.id.bar_search})
+    @OnClick({R.id.bar_menu,R.id.bar_net, R.id.bar_music, R.id.bar_friends, R.id.bar_search})
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.bar_menu:
+                mDrawerLayout.openDrawer(Gravity.START);
+                break;
             case R.id.bar_net:
                 mCustomViewpager.setCurrentItem(0);
                 break;
@@ -163,23 +164,8 @@ public class MainActivity extends BaseAvtivity {
                 break;
             case R.id.bar_search:
                 //跳转搜索页面
-
                 break;
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:
-                mDrawerLayout.openDrawer(Gravity.LEFT);
-                break;
-            default:
-                break;
-        }
-
-
-        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -187,12 +173,12 @@ public class MainActivity extends BaseAvtivity {
      */
     private void setDrawerLayout() {
         LayoutInflater inflater = LayoutInflater.from(this);
-        View drawerView = inflater.inflate(R.layout.nav_header_main,null);
+        View drawerView = inflater.inflate(R.layout.nav_header_main, null);
         mIdLvLeftMenu.addHeaderView(drawerView);
         mIdLvLeftMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch (position){
+                switch (position) {
                     case 1:
                         break;
                     case 2:
@@ -206,23 +192,24 @@ public class MainActivity extends BaseAvtivity {
 
     /**
      * 双击返回桌面
+     *
      * @param keyCode
      * @param event
      * @return
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK){
-            if (System.currentTimeMillis() - time > 1000){
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (System.currentTimeMillis() - time > 1000) {
                 Toast.makeText(this, "再按一次返回桌面", Toast.LENGTH_SHORT).show();
                 time = System.currentTimeMillis();
-            }else {
+            } else {
                 Intent intent = new Intent(Intent.ACTION_MAIN);
                 intent.addCategory(Intent.CATEGORY_HOME);
                 startActivity(intent);
             }
             return true;
-        }else {
+        } else {
             return super.onKeyDown(keyCode, event);
         }
     }
