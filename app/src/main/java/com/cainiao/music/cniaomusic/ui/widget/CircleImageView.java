@@ -20,7 +20,14 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-
+/**
+ * 描述：圆形的imageview
+ * 作者：gong.xl
+ * 创建日期：2017/7/3 下午10:43
+ * 修改日期: 2017/7/3
+ * 修改备注：
+ * 邮箱：gxianlin@126.com
+ */
 public class CircleImageView extends ImageView {
 
     private static final ScaleType SCALE_TYPE = ScaleType.CENTER_CROP;

@@ -11,8 +11,8 @@
         android:layout_height="match_parent" />
     <com.lapism.searchview.SearchView
         android:id="@+id/searchView"
+        android:fitsSystemWindows="true"
         android:layout_width="match_parent"
-        android:layout_marginTop="27dp"
         android:layout_height="match_parent"/>
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation"

@@ -22,11 +22,13 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cainiao.music.cniaomusic.ui.album.AlbumFragment;
 import com.cainiao.music.cniaomusic.ui.cnmusic.SearchActivity;
 import com.cainiao.music.cniaomusic.ui.radio.RadioFragment;
+import com.cainiao.music.cniaomusic.ui.widget.CircleImageView;
 
 import java.util.ArrayList;
 
@@ -66,6 +68,9 @@ public class MainActivity extends SearchActivity implements NavigationView.OnNav
     @InjectView(R.id.bar_menu)
     ImageView mBarMenu;
 
+    CircleImageView avatar;
+    TextView nicknameTv;
+    TextView aboutTv;
 
     private ActionBar mActionBar;
     private ArrayList<ImageView> tabs = new ArrayList<>();
@@ -142,7 +147,6 @@ public class MainActivity extends SearchActivity implements NavigationView.OnNav
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
     }
 
     /**
@@ -209,13 +213,13 @@ public class MainActivity extends SearchActivity implements NavigationView.OnNav
 
         toggle.syncState();
         mDrawerLayout.addDrawerListener(toggle);
-//        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setNavigationItemSelectedListener(this);
 
-//        avatar = (CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.drawer_avatar);
-//        nicknameTv = (TextView) navigationView.getHeaderView(0).findViewById(R.id.drawer_nickname);
-//        aboutTv = (TextView) navigationView.getHeaderView(0).findViewById(R.id.drawer_about);
-//
-//        avatar.setOnClickListener(this);
+        avatar = (CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.drawer_avatar);
+        nicknameTv = (TextView) navigationView.getHeaderView(0).findViewById(R.id.drawer_nickname);
+        aboutTv = (TextView) navigationView.getHeaderView(0).findViewById(R.id.drawer_about);
+
+        avatar.setOnClickListener(this);
 
     }
 

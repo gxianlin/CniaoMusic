@@ -12,6 +12,14 @@ import com.lapism.searchview.SearchView;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 描述：搜索
+ * 作者：gong.xl
+ * 创建日期：2017/7/5 下午10:43
+ * 修改日期: 2017/7/3
+ * 修改备注：
+ * 邮箱：gxianlin@126.com
+ */
 public abstract class SearchActivity extends BaseAvtivity {
     protected SearchHistoryTable mHistoryTable;
     protected SearchView searchView = null;
