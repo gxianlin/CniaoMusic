@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
 import android.view.View;
 
+import butterknife.ButterKnife;
+
 
 /**
  * 描述：所有activity的基类
@@ -50,6 +52,7 @@ public abstract class BaseAvtivity extends AppCompatActivity implements View.OnC
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mViews = new SparseArray<>();
         setContentView(getLayoutId());
+        ButterKnife.inject(this);
         receiveData();
         initViews();
         setListener();

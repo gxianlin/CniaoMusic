@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import butterknife.ButterKnife;
+
 /**
  * 描述：所有fragment的基类
  * 作者：gong.xl
@@ -25,12 +27,12 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     private boolean isFirstLoad = true;
     protected View contentView;
     private SparseArray<View> mViews;
-
     /**
      * 绑定布局文件
      * @return
      */
     public abstract int getLayoutId();
+
 
     /**
      * 初始化视图控件
@@ -62,6 +64,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         if (contentView == null) {
             contentView = inflater.inflate(getLayoutId(), container, false);
         }
+        ButterKnife.inject(this,contentView);
         initViews();
         isInitView = true;
         lazyLoad();

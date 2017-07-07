@@ -24,6 +24,8 @@
             android:launchMode="singleTask"/>
         <activity android:name=".ui.cnmusic.SearchActivity">
         </activity>
+        <activity android:name=".ui.cnmusic.LocalMusicActivity">
+        </activity>
     </application>
 
 </manifest>

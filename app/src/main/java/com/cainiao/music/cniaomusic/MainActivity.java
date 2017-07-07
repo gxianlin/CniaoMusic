@@ -26,13 +26,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cainiao.music.cniaomusic.ui.album.AlbumFragment;
+import com.cainiao.music.cniaomusic.ui.cnmusic.LocalMusicActivity;
 import com.cainiao.music.cniaomusic.ui.cnmusic.SearchActivity;
+import com.cainiao.music.cniaomusic.ui.friends.FriendsFragment;
 import com.cainiao.music.cniaomusic.ui.radio.RadioFragment;
 import com.cainiao.music.cniaomusic.ui.widget.CircleImageView;
 
 import java.util.ArrayList;
 
-import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import magicasakura.widgets.TintToolbar;
@@ -84,8 +85,6 @@ public class MainActivity extends SearchActivity implements NavigationView.OnNav
 
     @Override
     public void initViews() {
-        ButterKnife.inject(this);
-//        setToolBar();
         initToolbar();
         initDrawer();
     }
@@ -131,13 +130,6 @@ public class MainActivity extends SearchActivity implements NavigationView.OnNav
         setCustomViewPager();
     }
 
-
-    private void setToolBar() {
-        setSupportActionBar(mToolbar);
-        mActionBar = getSupportActionBar();
-        mActionBar.setDisplayUseLogoEnabled(false);
-        mActionBar.setDisplayShowTitleEnabled(false);
-    }
     /***
      * 初始化toolbar
      */
@@ -156,20 +148,22 @@ public class MainActivity extends SearchActivity implements NavigationView.OnNav
         //添加tab标签
         tabs.add(mBarNet);
         tabs.add(mBarMusic);
-
+        tabs.add(mBarFriends);
 
         MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         AlbumFragment albumFragment = new AlbumFragment();
         RadioFragment radioFragment = new RadioFragment();
+        FriendsFragment collectionFragment = new FriendsFragment();
 
         myPagerAdapter.addFragment(albumFragment);
         myPagerAdapter.addFragment(radioFragment);
+        myPagerAdapter.addFragment(collectionFragment);
 
         mCustomViewpager.setAdapter(myPagerAdapter);
         mCustomViewpager.setCurrentItem(1);
     }
 
-    @OnClick({R.id.bar_menu,R.id.bar_net, R.id.bar_music, R.id.bar_friends, R.id.bar_search})
+    @OnClick({R.id.bar_menu, R.id.bar_net, R.id.bar_music, R.id.bar_friends, R.id.bar_search})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bar_menu:
@@ -195,11 +189,11 @@ public class MainActivity extends SearchActivity implements NavigationView.OnNav
      */
     private void initDrawer() {
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout
-                , R.string.open_string, R.string.close_string){
+                , R.string.open_string, R.string.close_string) {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                if(searchView != null && searchView.isSearchOpen()){
+                if (searchView != null && searchView.isSearchOpen()) {
                     searchView.close(true);
                 }
             }
@@ -218,9 +212,7 @@ public class MainActivity extends SearchActivity implements NavigationView.OnNav
         avatar = (CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.drawer_avatar);
         nicknameTv = (TextView) navigationView.getHeaderView(0).findViewById(R.id.drawer_nickname);
         aboutTv = (TextView) navigationView.getHeaderView(0).findViewById(R.id.drawer_about);
-
         avatar.setOnClickListener(this);
-
     }
 
     /**
@@ -256,14 +248,14 @@ public class MainActivity extends SearchActivity implements NavigationView.OnNav
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_beats,menu);
+        menuInflater.inflate(R.menu.menu_beats, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.action_search){
+        if (id == R.id.action_search) {
             searchView.open(true);
             return true;
         }
@@ -279,9 +271,9 @@ public class MainActivity extends SearchActivity implements NavigationView.OnNav
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-        if(id == R.id.nav_library){
+        if (id == R.id.nav_library) {
             //跳转到本地歌曲的界面
-//            startToActivity(LocalMusicActivity.class);
+            startToActivity(LocalMusicActivity.class);
         }
 
         //关闭侧滑栏

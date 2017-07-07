@@ -18,7 +18,6 @@ import com.ilynn.base.syle.CircleNavigator;
 
 import java.util.ArrayList;
 
-import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 /**
@@ -52,7 +51,7 @@ public class GuideActivity extends BaseAvtivity {
 
     @Override
     public void initViews() {
-        ButterKnife.inject(this);
+
     }
 
     @Override
