@@ -10,8 +10,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 
 import com.cainiao.music.cniaomusic.R;
-import com.cainiao.music.cniaomusic.ui.cnmusic.BaseAvtivity;
-import com.cainiao.music.cniaomusic.ui.guide.GuideActivity;
+import com.cainiao.music.cniaomusic.ui.base.BaseAvtivity;
 
 /**
  * 功能：应用欢迎页面
@@ -64,7 +63,7 @@ public class WelcomeActivity extends BaseAvtivity {
                 //动画播放结束
                 //做出相关操作：用户登陆...
                 //页面跳转
-                startToActivity(GuideActivity.class);
+                startToActivity(MainActivity.class);
                 finish();
             }
         });

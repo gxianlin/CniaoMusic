@@ -11,6 +11,14 @@
         <!--导航栏的颜色-->
 
         <!--状态栏的颜色-->
+
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <!--Toolbar颜色-->
+        <item name="colorPrimary">@color/theme_color_Primary</item>
+        <!-- 状态栏颜色 -->
+        <item name="colorPrimaryDark">@color/theme_color_Primary</item>
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
     <style name="MyOverflowStyle" parent="@android:style/Widget.ActionButton.Overflow">

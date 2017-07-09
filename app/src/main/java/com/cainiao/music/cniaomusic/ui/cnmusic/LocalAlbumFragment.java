@@ -3,6 +3,7 @@ package com.cainiao.music.cniaomusic.ui.cnmusic;
 import android.view.View;
 
 import com.cainiao.music.cniaomusic.R;
+import com.cainiao.music.cniaomusic.ui.base.BaseFragment;
 
 
 public class LocalAlbumFragment extends BaseFragment {

@@ -17,29 +17,28 @@ import java.util.List;
 
 public class LocalMusicLibrary {
 
-
-
     /***
      * 获取本地所有对歌曲
      * @param context
      * @return
      */
-    public static List<Song> getAllSongs(Context context){
+    public static List<Song> getAllSongs(Context context) {
         ArrayList<Song> songs = new ArrayList<>();
         String selectionStatement = "is_music=1 AND title !=''";
         Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                new String[]{"_id","title","artist","album","duration","track","artist_id","album_id","_data"},selectionStatement,
-                null,MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
-        if((cursor != null) && cursor.moveToFirst())
+                new String[]{"_id", "title", "artist", "album", "duration", "track", "artist_id", "album_id",
+                        "_data"}, selectionStatement,
+                null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+        if ((cursor != null) && cursor.moveToFirst())
             do {
                 Song song = getSongFromCursor(cursor);
-                if(song.isStatus()){
+                if (song.isStatus()) {
                     songs.add(song);
                 }
 
             }
             while (cursor.moveToNext());
-        if(cursor != null){
+        if (cursor != null) {
             cursor.close();
         }
 
@@ -76,10 +75,9 @@ public class LocalMusicLibrary {
         return song;
     }
 
-    private static Uri getAlbumArtUri(long param){
-        return ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"),param);
+    private static Uri getAlbumArtUri(long param) {
+        return ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), param);
     }
-
 
 
 }

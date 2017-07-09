@@ -1,4 +1,4 @@
-package com.cainiao.music.cniaomusic.ui.cnmusic;
+package com.cainiao.music.cniaomusic.ui.base;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -113,5 +113,11 @@ public abstract class BaseAvtivity extends AppCompatActivity implements View.OnC
      */
     public <E extends View> void setOnClick(E view) {
         view.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ButterKnife.reset(this);
     }
 }

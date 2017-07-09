@@ -1,4 +1,4 @@
-package com.cainiao.music.cniaomusic;
+package com.cainiao.music.cniaomusic.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cainiao.music.cniaomusic.R;
 import com.cainiao.music.cniaomusic.ui.album.AlbumFragment;
 import com.cainiao.music.cniaomusic.ui.cnmusic.LocalMusicActivity;
 import com.cainiao.music.cniaomusic.ui.cnmusic.SearchActivity;
@@ -153,11 +154,11 @@ public class MainActivity extends SearchActivity implements NavigationView.OnNav
         MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         AlbumFragment albumFragment = new AlbumFragment();
         RadioFragment radioFragment = new RadioFragment();
-        FriendsFragment collectionFragment = new FriendsFragment();
+        FriendsFragment friendsFragment = new FriendsFragment();
 
         myPagerAdapter.addFragment(albumFragment);
         myPagerAdapter.addFragment(radioFragment);
-        myPagerAdapter.addFragment(collectionFragment);
+        myPagerAdapter.addFragment(friendsFragment);
 
         mCustomViewpager.setAdapter(myPagerAdapter);
         mCustomViewpager.setCurrentItem(1);

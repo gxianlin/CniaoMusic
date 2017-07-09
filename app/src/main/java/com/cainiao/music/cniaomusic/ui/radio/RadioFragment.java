@@ -1,16 +1,15 @@
 package com.cainiao.music.cniaomusic.ui.radio;
 
 import android.view.View;
-import android.widget.TextView;
 
 import com.cainiao.music.cniaomusic.R;
-import com.cainiao.music.cniaomusic.ui.cnmusic.BaseFragment;
+import com.cainiao.music.cniaomusic.ui.base.BaseFragment;
+import com.cainiao.music.cniaomusic.ui.cnmusic.LocalMusicActivity;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.OnClick;
 
 /**
- * 描述：唱片
+ * 描述：播放记录及本地音乐页面
  * 作者：gong.xl
  * 创建日期：2017/7/4 下午22:20
  * 修改日期: 2017/7/4
@@ -18,9 +17,6 @@ import butterknife.InjectView;
  * 邮箱：gxianlin@126.com
  */
 public class RadioFragment extends BaseFragment {
-
-    @InjectView(R.id.textview)
-    TextView mTextview;
 
     public RadioFragment() {
         // Required empty public constructor
@@ -53,10 +49,8 @@ public class RadioFragment extends BaseFragment {
     }
 
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ButterKnife.reset(this);
+    @OnClick(R.id.local_music)
+    public void onClick() {
+        startToActivity(LocalMusicActivity.class);
     }
-
 }

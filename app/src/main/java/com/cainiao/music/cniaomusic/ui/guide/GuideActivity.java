@@ -9,9 +9,9 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Button;
 
-import com.cainiao.music.cniaomusic.MainActivity;
+import com.cainiao.music.cniaomusic.ui.MainActivity;
 import com.cainiao.music.cniaomusic.R;
-import com.cainiao.music.cniaomusic.ui.cnmusic.BaseAvtivity;
+import com.cainiao.music.cniaomusic.ui.base.BaseAvtivity;
 import com.ilynn.base.PageIndicator;
 import com.ilynn.base.ViewPagerHelper;
 import com.ilynn.base.syle.CircleNavigator;

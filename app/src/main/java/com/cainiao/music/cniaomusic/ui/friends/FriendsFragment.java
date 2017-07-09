@@ -3,7 +3,7 @@ package com.cainiao.music.cniaomusic.ui.friends;
 import android.view.View;
 
 import com.cainiao.music.cniaomusic.R;
-import com.cainiao.music.cniaomusic.ui.cnmusic.BaseFragment;
+import com.cainiao.music.cniaomusic.ui.base.BaseFragment;
 
 
 public class FriendsFragment extends BaseFragment {

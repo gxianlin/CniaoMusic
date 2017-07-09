@@ -3,7 +3,7 @@ package com.cainiao.music.cniaomusic.ui.album;
 import android.view.View;
 
 import com.cainiao.music.cniaomusic.R;
-import com.cainiao.music.cniaomusic.ui.cnmusic.BaseFragment;
+import com.cainiao.music.cniaomusic.ui.base.BaseFragment;
 
 /**
  * 描述：唱片

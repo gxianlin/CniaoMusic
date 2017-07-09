@@ -26,7 +26,7 @@
                 android:layout_width="55dp"
                 android:layout_height="match_parent"
                 android:clickable="true"
-                android:padding="10dp"
+                android:padding="15dp"
                 android:src="@drawable/ic_menu"/>
 
             <ImageView

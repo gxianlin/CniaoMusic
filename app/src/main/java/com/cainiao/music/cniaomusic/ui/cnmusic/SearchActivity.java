@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.cainiao.music.cniaomusic.R;
+import com.cainiao.music.cniaomusic.ui.base.BaseAvtivity;
 import com.lapism.searchview.SearchAdapter;
 import com.lapism.searchview.SearchHistoryTable;
 import com.lapism.searchview.SearchItem;

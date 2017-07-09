@@ -48,6 +48,7 @@
 
     <!-- Menu Item Color -->
 
+    <color name="line">#dddddd</color>
 
     <color name="menu_transparent">#00FFFFFF</color>
 

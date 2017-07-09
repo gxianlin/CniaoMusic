@@ -25,8 +25,9 @@
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/tab_height"
-            app:tabIndicatorColor="@color/white"
-            app:tabSelectedTextColor="@color/black_alpha"
+            android:background="@color/white"
+            app:tabIndicatorColor="@color/theme_color_Primary"
+            app:tabSelectedTextColor="@color/theme_color_Primary"
             app:tabTextColor="@color/black_alpha_more"/>
 
     </android.support.design.widget.AppBarLayout>

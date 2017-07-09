@@ -1,4 +1,4 @@
-package com.cainiao.music.cniaomusic.ui.cnmusic;
+package com.cainiao.music.cniaomusic.ui.base;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -118,7 +118,20 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         }
         return view;
     }
+    /***
+     * 跳转页面
+     */
+    public void startToActivity(Class activity) {
+        Intent intent = new Intent();
+        intent.setClass(getActivity(), activity);
+        startActivity(intent);
+    }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.reset(this);
+    }
     /**
      * 设置view的点击事件
      *

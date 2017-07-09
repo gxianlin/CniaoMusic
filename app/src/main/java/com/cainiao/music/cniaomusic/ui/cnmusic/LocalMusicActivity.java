@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.cainiao.music.cniaomusic.R;
 import com.cainiao.music.cniaomusic.ui.adapter.TabFragmentAdapter;
+import com.cainiao.music.cniaomusic.ui.base.BaseAvtivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +32,24 @@ public class LocalMusicActivity extends BaseAvtivity {
 
     @Override
     public void initViews() {
+        initToolbar();
+    }
 
+    private void initToolbar() {
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
+        getSupportActionBar().setTitle(R.string.local_library); //设置返回键可用
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
     public void setListener() {
-
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override
@@ -44,8 +57,9 @@ public class LocalMusicActivity extends BaseAvtivity {
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(LocalMusicFragment.newInstance());
         fragments.add(LocalAlbumFragment.newInstance());
+        fragments.add(LocalSingerFragment.newInstance());
         TabFragmentAdapter fragmentAdapter = new TabFragmentAdapter(getSupportFragmentManager(),fragments);
-        fragmentAdapter.setTitles(new String[]{"单曲","专辑"});
+        fragmentAdapter.setTitles(new String[]{"单曲","歌手","专辑"});
         mViewpager.setAdapter(fragmentAdapter);
         mViewpager.setCurrentItem(0);
         mViewpager.setOffscreenPageLimit(2);
