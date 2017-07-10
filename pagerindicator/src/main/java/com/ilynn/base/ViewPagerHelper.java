@@ -12,6 +12,11 @@ import android.support.v4.view.ViewPager;
  * 邮箱：gong.xl@wonhigh.cn
  */
 public class ViewPagerHelper {
+    /**
+     * 绑定viewpager与标题
+     * @param pageIndicator
+     * @param viewPager
+     */
     public static void bind(final PageIndicator pageIndicator, ViewPager viewPager) {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

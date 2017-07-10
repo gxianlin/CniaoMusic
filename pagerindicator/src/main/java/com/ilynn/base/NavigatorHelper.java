@@ -16,51 +16,36 @@ import com.ilynn.base.abs.IOnNavigatorScrollListener;
  * 邮箱：gong.xl@wonhigh.cn
  */
 public class NavigatorHelper {
-
     private SparseBooleanArray mDeselectedItems = new SparseBooleanArray();
-    private SparseArray<Float> mLeavedPercents = new SparseArray<>();
+    private SparseArray<Float> mLeavedPercents  = new SparseArray<>();
 
-
-    private int mTotalCount;
-    private int mCurrentIndex;
-    private int mLastIndex;
+    private int   mTotalCount;
+    private int   mCurrentIndex;
+    private int   mLastIndex;
     private float mLastPositionOffsetSum;
-    private int mScrollState;
+    private int   mScrollState;
 
-    private boolean mSkimOver;
+    private boolean                                  mSkimOver;
+    private IOnNavigatorScrollListener mNavigatorScrollListener;
 
-    private IOnNavigatorScrollListener mINavigatorScrollListener;
-
-
-    /**
-     * viewpager滑动的回调
-     *
-     * @param position
-     * @param positionOffset
-     * @param positionOffsetPixels
-     */
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        float currentPositionOffsetSum = position + positionOffset;
-
-        boolean leftToRight = false;
+        float   currentPositionOffsetSum = position + positionOffset;
+        boolean leftToRight              = false;
         if (mLastPositionOffsetSum <= currentPositionOffsetSum) {
             leftToRight = true;
         }
-
         if (mScrollState != ScrollState.SCROLL_STATE_IDLE) {
             if (currentPositionOffsetSum == mLastPositionOffsetSum) {
                 return;
             }
-
-            int nextPosition = position + 1;
+            int     nextPosition   = position + 1;
             boolean normalDispatch = true;
             if (positionOffset == 0.0f) {
                 if (leftToRight) {
-                    nextPosition = position + 1;
+                    nextPosition = position - 1;
                     normalDispatch = false;
                 }
             }
-
             for (int i = 0; i < mTotalCount; i++) {
                 if (i == position || i == nextPosition) {
                     continue;
@@ -70,7 +55,6 @@ public class NavigatorHelper {
                     dispatchOnLeave(i, 1.0f, leftToRight, true);
                 }
             }
-
             if (normalDispatch) {
                 if (leftToRight) {
                     dispatchOnLeave(position, positionOffset, true, false);
@@ -88,30 +72,56 @@ public class NavigatorHelper {
                 if (i == mCurrentIndex) {
                     continue;
                 }
-
                 boolean deselected = mDeselectedItems.get(i);
                 if (!deselected) {
                     dispatchOnDeselected(i);
                 }
-
                 Float leavedPercent = mLeavedPercents.get(i, 0.0f);
                 if (leavedPercent != 1.0f) {
                     dispatchOnLeave(i, 1.0f, false, true);
                 }
             }
-
             dispatchOnEnter(mCurrentIndex, 1.0f, false, true);
             dispatchOnSelected(mCurrentIndex);
         }
-
         mLastPositionOffsetSum = currentPositionOffsetSum;
     }
 
-    /**
-     * viewpager选择回调
-     *
-     * @param position
-     */
+    private void dispatchOnEnter(int index, float enterPercent, boolean leftToRight, boolean force) {
+        if (mSkimOver || index == mCurrentIndex || mScrollState == ScrollState.SCROLL_STATE_DRAGGING || force) {
+            if (mNavigatorScrollListener != null) {
+                mNavigatorScrollListener.onEnter(index, mTotalCount, enterPercent, leftToRight);
+            }
+            mLeavedPercents.put(index, 1.0f - enterPercent);
+        }
+    }
+
+    private void dispatchOnLeave(int index, float leavePercent, boolean leftToRight, boolean force) {
+        if (mSkimOver || index == mLastIndex || mScrollState == ScrollState.SCROLL_STATE_DRAGGING ||
+                ((index == mCurrentIndex - 1 || index == mCurrentIndex + 1) &&
+                        mLeavedPercents.get(index, 0.0f) != 1.0f) || force) {
+
+            if (mNavigatorScrollListener != null) {
+                mNavigatorScrollListener.onLeave(index, mTotalCount, leavePercent, leftToRight);
+            }
+            mLeavedPercents.put(index, leavePercent);
+        }
+    }
+
+    private void dispatchOnSelected(int index) {
+        if (mNavigatorScrollListener != null) {
+            mNavigatorScrollListener.onSelected(index, mTotalCount);
+        }
+        mDeselectedItems.put(index, false);
+    }
+
+    private void dispatchOnDeselected(int index) {
+        if (mNavigatorScrollListener != null) {
+            mNavigatorScrollListener.onDeselected(index, mTotalCount);
+        }
+        mDeselectedItems.put(index, true);
+    }
+
     public void onPageSelected(int position) {
         mLastIndex = mCurrentIndex;
         mCurrentIndex = position;
@@ -120,7 +130,6 @@ public class NavigatorHelper {
             if (i == mCurrentIndex) {
                 continue;
             }
-
             boolean deselected = mDeselectedItems.get(i);
             if (!deselected) {
                 dispatchOnDeselected(i);
@@ -128,20 +137,12 @@ public class NavigatorHelper {
         }
     }
 
-    /**
-     * @param state
-     */
     public void onPageScrollStateChanged(int state) {
         mScrollState = state;
     }
 
-    /**
-     * 设置状态监听事件
-     *
-     * @param navigatorScrollListener
-     */
     public void setNavigatorScrollListener(IOnNavigatorScrollListener navigatorScrollListener) {
-        mINavigatorScrollListener = navigatorScrollListener;
+        mNavigatorScrollListener = navigatorScrollListener;
     }
 
     public void setSkimOver(boolean skimOver) {
@@ -158,45 +159,11 @@ public class NavigatorHelper {
         mLeavedPercents.clear();
     }
 
-    private void dispatchOnSelected(int index) {
-        if (mINavigatorScrollListener != null) {
-            mINavigatorScrollListener.onSelected(index, mTotalCount);
-        }
-        mDeselectedItems.put(index, false);
-    }
-
     public int getCurrentIndex() {
         return mCurrentIndex;
     }
 
     public int getScrollState() {
         return mScrollState;
-    }
-
-    private void dispatchOnDeselected(int index) {
-        if (mINavigatorScrollListener != null) {
-            mINavigatorScrollListener.onDeselected(index, mTotalCount);
-        }
-        mDeselectedItems.put(index, true);
-    }
-
-    private void dispatchOnEnter(int index, float enterPercent, boolean leftToRight, boolean forse) {
-        if (mSkimOver || index == mCurrentIndex || mScrollState == ScrollState.SCROLL_STATE_DRAGGING || forse) {
-            if (mINavigatorScrollListener != null) {
-                mINavigatorScrollListener.onEnter(index, mTotalCount, enterPercent, leftToRight);
-            }
-            mLeavedPercents.put(index, 1.0f - enterPercent);
-        }
-    }
-
-    private void dispatchOnLeave(int index, float leavePercent, boolean leftToRight, boolean forse) {
-        if (mSkimOver || index == mLastIndex || mScrollState == ScrollState.SCROLL_STATE_DRAGGING || ((index ==
-                mCurrentIndex - 1 || index == mCurrentIndex + 1) && mLeavedPercents.get(index, 0.0f) != 1.0f) ||
-                forse) {
-            if (mINavigatorScrollListener != null) {
-                mINavigatorScrollListener.onLeave(index, mTotalCount, leavePercent, leftToRight);
-            }
-            mLeavedPercents.put(index, leavePercent);
-        }
     }
 }

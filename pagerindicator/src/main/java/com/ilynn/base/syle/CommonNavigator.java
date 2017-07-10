@@ -2,7 +2,7 @@ package com.ilynn.base.syle;
 
 import android.content.Context;
 import android.database.DataSetObserver;
-import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,80 +11,134 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
 import com.ilynn.base.CommonNavigatorAdapter;
-import com.ilynn.base.title.IMeasureablePageTitleView;
-import com.ilynn.base.title.IPageTitleView;
 import com.ilynn.base.IPagerIndicator;
 import com.ilynn.base.NavigatorHelper;
 import com.ilynn.base.PositionData;
 import com.ilynn.base.R;
+import com.ilynn.base.ScrollState;
 import com.ilynn.base.abs.IOnNavigatorScrollListener;
 import com.ilynn.base.abs.IPageNavigator;
+import com.ilynn.base.title.IMeasureablePageTitleView;
+import com.ilynn.base.title.IPageTitleView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 描述：通用viewpager指示器
+ * 描述：通用的ViewPager指示器，包含PagerTitle和PagerIndicator
+ * <p>
  * <p>
  * 作者：gong.xl
- * 创建日期：2017/7/6 下午5:18
- * 修改日期: 2017/7/6
+ * 创建日期：2017/7/4 下午5:38
+ * 修改日期: 2017/7/4
  * 修改备注：
  * 邮箱：gong.xl@wonhigh.cn
  */
-
 public class CommonNavigator extends FrameLayout implements IPageNavigator, IOnNavigatorScrollListener {
-
+    private LayoutInflater mInflater;
     private HorizontalScrollView mScrollView;
     private LinearLayout mTitleContainer;
     private LinearLayout mIndicatorContainer;
     private IPagerIndicator mIndicator;
 
-    private IPageTitleView mTitleView;
-
     private CommonNavigatorAdapter mAdapter;
     private NavigatorHelper mNavigatorHelper;
 
-    private List<PositionData> mPositionDatas = new ArrayList<>();
-
-    private boolean mAdjustMode;
-    private boolean mEnablePivotScroll;
-    private float mScrollPivotX = 0.5f;
-    private boolean mSmoothScroll = true;
-    private boolean mFollowTouch = true;
-    private boolean mIndicatorOnTop;
-    private boolean mSkimOver;
-    private boolean mReselectWhenLayout = true;
-    private int mLeftPadding;
+    /**
+     * 提供给外部的参数配置
+     */
+    /****************************************************/
+    private boolean mAdjustMode;   // 自适应模式，适用于数目固定的、少量的title
+    private boolean mEnablePivotScroll; // 启动中心点滚动
+    private float mScrollPivotX = 0.5f; // 滚动中心点 0.0f - 1.0f
+    private boolean mSmoothScroll = true;   // 是否平滑滚动，适用于 !mAdjustMode && !mFollowTouch
+    private boolean mFollowTouch = true;    // 是否手指跟随滚动
     private int mRightPadding;
+    private int mLeftPadding;
+    private boolean mIndicatorOnTop;    // 指示器是否在title上层，默认为下层
+    private boolean mSkimOver;  // 跨多页切换时，中间页是否显示 "掠过" 效果
+    private boolean mReselectWhenLayout = true; // PositionData准备好时，是否重新选中当前页，为true可保证在极端情况下指示器状态正确
+    /****************************************************/
 
+    // 保存每个title的位置信息，为扩展indicator提供保障
+    private List<PositionData> mPositionDataList = new ArrayList<PositionData>();
 
     private DataSetObserver mObserver = new DataSetObserver() {
+
         @Override
         public void onChanged() {
-            mNavigatorHelper.setTotalCount(mAdapter.getCount());
+            mNavigatorHelper.setTotalCount(mAdapter.getCount());    // 如果使用helper，应始终保证helper中的totalCount为最新
             init();
         }
 
         @Override
         public void onInvalidated() {
-
+            // 没什么用，暂不做处理
         }
     };
 
+    public CommonNavigator(Context context) {
+        super(context);
+        mInflater = LayoutInflater.from(context);
+        mNavigatorHelper = new NavigatorHelper();
+        mNavigatorHelper.setNavigatorScrollListener(this);
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    public boolean isAdjustMode() {
+        return mAdjustMode;
+    }
+
+    public void setAdjustMode(boolean is) {
+        mAdjustMode = is;
+    }
+
+    public CommonNavigatorAdapter getAdapter() {
+        return mAdapter;
+    }
+
+    public void setAdapter(CommonNavigatorAdapter adapter) {
+        if (mAdapter == adapter) {
+            return;
+        }
+        if (mAdapter != null) {
+            mAdapter.unregisterDataSetObserver(mObserver);
+        }
+        mAdapter = adapter;
+        if (mAdapter != null) {
+            mAdapter.registerDataSetObserver(mObserver);
+            mNavigatorHelper.setTotalCount(mAdapter.getCount());
+            if (mTitleContainer != null) {  // adapter改变时，应该重新init，但是第一次设置adapter不用，onAttachToMagicIndicator中有init
+                mAdapter.notifyDataSetChanged();
+            }
+        } else {
+            mNavigatorHelper.setTotalCount(0);
+            init();
+        }
+    }
 
     private void init() {
+        removeAllViews();
         View root;
+
         if (mAdjustMode) {
-            root = LayoutInflater.from(getContext()).inflate(R.layout.page_navigator_layout_no_scroll, this);
+            root = mInflater.inflate(R.layout.page_navigator_layout_no_scroll, this);
         } else {
-            root = LayoutInflater.from(getContext()).inflate(R.layout.page_navigator_layout, this);
+            root = mInflater.inflate(R.layout.page_navigator_layout, this);
         }
 
         mScrollView = (HorizontalScrollView) root.findViewById(R.id.scroll_view);
+        //mAdjustMode为true时，mScrollView为null
 
         mTitleContainer = (LinearLayout) root.findViewById(R.id.title_container);
         mTitleContainer.setPadding(mLeftPadding, 0, mRightPadding, 0);
+
         mIndicatorContainer = (LinearLayout) root.findViewById(R.id.indicator_container);
         if (mIndicatorOnTop) {
             mIndicatorContainer.getParent().bringChildToFront(mIndicatorContainer);
@@ -94,42 +148,32 @@ public class CommonNavigator extends FrameLayout implements IPageNavigator, IOnN
     }
 
     /**
-     * 初始化标题栏中标题和指示样式
+     * 初始化title和indicator
      */
     private void initTitlesAndIndicator() {
         for (int i = 0, j = mNavigatorHelper.getTotalCount(); i < j; i++) {
-            IPageTitleView titleView = mAdapter.getTitleView(getContext(), i);
-            if (titleView instanceof View) {
-                View view = (View) titleView;
+            IPageTitleView v = mAdapter.getTitleView(getContext(), i);
+            if (v instanceof View) {
+                View view = (View) v;
                 LinearLayout.LayoutParams lp;
                 if (mAdjustMode) {
                     lp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
                     lp.weight = mAdapter.getTitleWeight(getContext(), i);
                 } else {
-                    lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams
-                            .MATCH_PARENT);
+                    lp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
                 }
                 mTitleContainer.addView(view, lp);
             }
         }
-
         if (mAdapter != null) {
             mIndicator = mAdapter.getIndicator(getContext());
             if (mIndicator instanceof View) {
-                LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup
-                        .LayoutParams.MATCH_PARENT);
-                mIndicatorContainer.addView((View) mIndicator, layoutParams);
+                LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams
+                        .MATCH_PARENT);
+                mIndicatorContainer.addView((View) mIndicator, lp);
             }
         }
     }
-
-
-    public CommonNavigator(@NonNull Context context) {
-        super(context);
-        mNavigatorHelper = new NavigatorHelper();
-        mNavigatorHelper.setNavigatorScrollListener(this);
-    }
-
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
@@ -137,9 +181,9 @@ public class CommonNavigator extends FrameLayout implements IPageNavigator, IOnN
         if (mAdapter != null) {
             preparePositionData();
             if (mIndicator != null) {
-                mIndicator.onPositionDataProvide(mPositionDatas);
+                mIndicator.onPositionDataProvide(mPositionDataList);
             }
-            if (mReselectWhenLayout) {
+            if (mReselectWhenLayout && mNavigatorHelper.getScrollState() == ScrollState.SCROLL_STATE_IDLE) {
                 onPageSelected(mNavigatorHelper.getCurrentIndex());
                 onPageScrolled(mNavigatorHelper.getCurrentIndex(), 0.0f, 0);
             }
@@ -147,12 +191,14 @@ public class CommonNavigator extends FrameLayout implements IPageNavigator, IOnN
     }
 
     /**
-     * 获取title的位置信息,创建不同的指示器样式
+     * 获取title的位置信息，为打造不同的指示器、各种效果提供可能
      */
     private void preparePositionData() {
-        mPositionDatas.clear();
+        mPositionDataList.clear();
         for (int i = 0, j = mNavigatorHelper.getTotalCount(); i < j; i++) {
             PositionData data = new PositionData();
+            Log.e("tag", "i=" + i + ",mNavigatorHelper.getTotalCount()=" + mNavigatorHelper.getTotalCount());
+            Log.e("tag", "mTitleContainer=" + (mTitleContainer == null));
             View v = mTitleContainer.getChildAt(i);
             if (v != null) {
                 data.mLeft = v.getLeft();
@@ -172,36 +218,43 @@ public class CommonNavigator extends FrameLayout implements IPageNavigator, IOnN
                     data.mContentBottom = data.mBottom;
                 }
             }
-            mPositionDatas.add(data);
+            mPositionDataList.add(data);
         }
     }
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
         if (mAdapter != null) {
+
             mNavigatorHelper.onPageScrolled(position, positionOffset, positionOffsetPixels);
             if (mIndicator != null) {
                 mIndicator.onPageScrolled(position, positionOffset, positionOffsetPixels);
             }
 
-
-            //手动跟随滚动
-            if (mScrollView != null && mPositionDatas.size() > 0 && position >= 0 && position < mPositionDatas.size()) {
+            // 手指跟随滚动
+            if (mScrollView != null && mPositionDataList.size() > 0 && position >= 0 && position < mPositionDataList
+                    .size()) {
                 if (mFollowTouch) {
-                    int currentPosition = Math.min(mPositionDatas.size() - 1, position);
-                    int nextPosition = Math.min(mPositionDatas.size() - 1, position + 1);
-                    PositionData current = mPositionDatas.get(currentPosition);
-                    PositionData next = mPositionDatas.get(nextPosition);
+                    int currentPosition = Math.min(mPositionDataList.size() - 1, position);
+                    int nextPosition = Math.min(mPositionDataList.size() - 1, position + 1);
+                    PositionData current = mPositionDataList.get(currentPosition);
+                    PositionData next = mPositionDataList.get(nextPosition);
                     float scrollTo = current.horizontalCenter() - mScrollView.getWidth() * mScrollPivotX;
                     float nextScrollTo = next.horizontalCenter() - mScrollView.getWidth() * mScrollPivotX;
-
                     mScrollView.scrollTo((int) (scrollTo + (nextScrollTo - scrollTo) * positionOffset), 0);
-                } else {
-                    //TODO 实现待选中项完全显示出来
+                } else if (!mEnablePivotScroll) {
+                    // TODO 实现待选中项完全显示出来
                 }
             }
         }
+    }
+
+    public float getScrollPivotX() {
+        return mScrollPivotX;
+    }
+
+    public void setScrollPivotX(float scrollPivotX) {
+        mScrollPivotX = scrollPivotX;
     }
 
     @Override
@@ -234,11 +287,17 @@ public class CommonNavigator extends FrameLayout implements IPageNavigator, IOnN
 
     }
 
-    @Override
-    public void notifyDataSetChanged() {
-        if (mAdapter != null) {
-            mAdapter.notifyDataSetChanged();
-        }
+
+    public IPagerIndicator getPagerIndicator() {
+        return mIndicator;
+    }
+
+    public boolean isEnablePivotScroll() {
+        return mEnablePivotScroll;
+    }
+
+    public void setEnablePivotScroll(boolean is) {
+        mEnablePivotScroll = is;
     }
 
     @Override
@@ -265,120 +324,7 @@ public class CommonNavigator extends FrameLayout implements IPageNavigator, IOnN
         }
     }
 
-    @Override
-    public void onSelected(int index, int totalCount) {
-        if (mTitleContainer == null) {
-            return;
-        }
-
-        View v = mTitleContainer.getChildAt(index);
-        if (v instanceof IPageTitleView) {
-            ((IPageTitleView) v).onSelected(index, totalCount);
-        }
-
-        if (!mAdjustMode && !mFollowTouch && mScrollView != null && mPositionDatas.size() > 0) {
-            int currentIndex = Math.min(mPositionDatas.size() - 1, index);
-            PositionData current = mPositionDatas.get(currentIndex);
-            if (mEnablePivotScroll) {
-                float scrollTo = current.horizontalCenter() - mScrollView.getWidth() * mScrollPivotX;
-                if (mSmoothScroll) {
-                    mScrollView.smoothScrollTo((int) scrollTo, 0);
-                } else {
-                    mScrollView.scrollTo((int) scrollTo, 0);
-                }
-            } else {
-                if (mScrollView.getScaleX() > current.mLeft) {
-                    if (mSmoothScroll) {
-                        mScrollView.smoothScrollTo(current.mLeft, 0);
-                    } else {
-                        mScrollView.scrollTo(current.mLeft, 0);
-                    }
-                } else if (mScrollView.getScaleX() + getWidth() < current.mRight) {
-                    if (mSmoothScroll) {
-                        mScrollView.smoothScrollTo(current.mRight - getWidth(), 0);
-                    } else {
-                        mScrollView.scrollTo(current.mRight - getWidth(), 0);
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    public void onDeselected(int index, int totalCount) {
-        if (mTitleContainer == null) {
-            return;
-        }
-
-        View v = mTitleContainer.getChildAt(index);
-        if (v instanceof IPageTitleView) {
-            ((IPageTitleView) v).onDeselected(index, totalCount);
-        }
-    }
-
-    public CommonNavigatorAdapter getAdapter() {
-        return mAdapter;
-    }
-
-    public void setAdapter(CommonNavigatorAdapter adapter) {
-
-        if (mAdapter == adapter) {
-            return;
-        }
-        if (mAdapter == null) {
-            mAdapter.registerDataSetObserver(mObserver);
-            mNavigatorHelper.setTotalCount(mAdapter.getCount());
-            if (mTitleContainer != null) {
-                mAdapter.notifyDataSetChanged();
-            }
-        } else {
-            mNavigatorHelper.setTotalCount(0);
-            init();
-        }
-    }
-
-    public boolean isIndicatorOnTop() {
-        return mIndicatorOnTop;
-    }
-
-    public void setIndicatorOnTop(boolean indicatorOnTop) {
-        mIndicatorOnTop = indicatorOnTop;
-    }
-
-    public boolean isReselectWhenLayout() {
-        return mReselectWhenLayout;
-    }
-
-    public void setReselectWhenLayout(boolean reselectWhenLayout) {
-        mReselectWhenLayout = reselectWhenLayout;
-    }
-
-    public int getLeftPadding() {
-        return mLeftPadding;
-    }
-
-    public void setLeftPadding(int leftPadding) {
-        mLeftPadding = leftPadding;
-    }
-
-    public int getRightPadding() {
-        return mRightPadding;
-    }
-
-    public void setRightPadding(int rightPadding) {
-        mRightPadding = rightPadding;
-    }
-
-    public boolean isEnablePivotScroll() {
-        return mEnablePivotScroll;
-    }
-
-    public void setEnablePivotScroll(boolean enablePivotScroll) {
-        mEnablePivotScroll = enablePivotScroll;
-    }
-
     public boolean isSmoothScroll() {
-
         return mSmoothScroll;
     }
 
@@ -400,36 +346,99 @@ public class CommonNavigator extends FrameLayout implements IPageNavigator, IOnN
 
     public void setSkimOver(boolean skimOver) {
         mSkimOver = skimOver;
+        mNavigatorHelper.setSkimOver(skimOver);
+    }
+
+    @Override
+    public void onSelected(int index, int totalCount) {
+        if (mTitleContainer == null) {
+            return;
+        }
+
+        View v = mTitleContainer.getChildAt(index);
+        if (v instanceof IPageTitleView) {
+            ((IPageTitleView) v).onSelected(index, totalCount);
+        }
+        if (!mAdjustMode && !mFollowTouch && mScrollView != null && mPositionDataList.size() > 0) {
+            int currentIndex = Math.min(mPositionDataList.size() - 1, index);
+            PositionData current = mPositionDataList.get(currentIndex);
+            if (mEnablePivotScroll) {
+                float scrollTo = current.horizontalCenter() - mScrollView.getWidth() * mScrollPivotX;
+                if (mSmoothScroll) {
+                    mScrollView.smoothScrollTo((int) (scrollTo), 0);
+                } else {
+                    mScrollView.scrollTo((int) (scrollTo), 0);
+                }
+            } else {
+                // 如果当前项被部分遮挡，则滚动显示完全
+                if (mScrollView.getScrollX() > current.mLeft) {
+                    if (mSmoothScroll) {
+                        mScrollView.smoothScrollTo(current.mLeft, 0);
+                    } else {
+                        mScrollView.scrollTo(current.mLeft, 0);
+                    }
+                } else if (mScrollView.getScrollX() + getWidth() < current.mRight) {
+                    if (mSmoothScroll) {
+                        mScrollView.smoothScrollTo(current.mRight - getWidth(), 0);
+                    } else {
+                        mScrollView.scrollTo(current.mRight - getWidth(), 0);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onDeselected(int index, int totalCount) {
+        if (mTitleContainer == null) {
+            return;
+        }
+        View v = mTitleContainer.getChildAt(index);
+        if (v instanceof IPageTitleView) {
+            ((IPageTitleView) v).onDeselected(index, totalCount);
+        }
+    }
+
+    public IPageTitleView getPagerTitleView(int index) {
+        if (mTitleContainer == null) {
+            return null;
+        }
+        return (IPageTitleView) mTitleContainer.getChildAt(index);
     }
 
     public LinearLayout getTitleContainer() {
         return mTitleContainer;
     }
 
-    public IPagerIndicator getPageIndicator() {
-        return mIndicator;
+    public int getRightPadding() {
+        return mRightPadding;
     }
 
-    public boolean isAdjustMode() {
-        return mAdjustMode;
+    public void setRightPadding(int rightPadding) {
+        mRightPadding = rightPadding;
     }
 
-    public void setAdjustMode(boolean adjustMode) {
-        mAdjustMode = adjustMode;
+    public int getLeftPadding() {
+        return mLeftPadding;
     }
 
-    public float getScrollPivotX() {
-        return mScrollPivotX;
+    public void setLeftPadding(int leftPadding) {
+        mLeftPadding = leftPadding;
     }
 
-    public void setScrollPivotX(float scrollPivotX) {
-        mScrollPivotX = scrollPivotX;
+    public boolean isIndicatorOnTop() {
+        return mIndicatorOnTop;
     }
 
-    public IPageTitleView getPageTitleVIew(int index) {
-        if (mTitleContainer == null) {
-            return null;
-        }
-        return (IPageTitleView) mTitleContainer.getChildAt(index);
+    public void setIndicatorOnTop(boolean indicatorOnTop) {
+        mIndicatorOnTop = indicatorOnTop;
+    }
+
+    public boolean isReselectWhenLayout() {
+        return mReselectWhenLayout;
+    }
+
+    public void setReselectWhenLayout(boolean reselectWhenLayout) {
+        mReselectWhenLayout = reselectWhenLayout;
     }
 }
