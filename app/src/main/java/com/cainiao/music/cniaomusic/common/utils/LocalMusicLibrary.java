@@ -41,8 +41,6 @@ public class LocalMusicLibrary {
         if (cursor != null) {
             cursor.close();
         }
-
-
         return songs;
     }
 

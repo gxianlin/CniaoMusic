@@ -1,7 +1,5 @@
 package com.cainiao.music.cniaomusic.ui.cnmusic;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -40,12 +38,6 @@ public class LocalMusicFragment extends BaseFragment implements LocalIview.Local
         return fragment;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mLibraryPresenter = new LocalLibraryPresenter(getActivity(), this);
-        mMusicPlaylist = new MusicPlaylist();
-    }
 
     @Override
     public int getLayoutId() {
@@ -54,11 +46,7 @@ public class LocalMusicFragment extends BaseFragment implements LocalIview.Local
 
     @Override
     public void initViews() {
-        mMusicAdapter = new LocalMusicListAdapter(getActivity());
         mRecylerview.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecylerview.setAdapter(mMusicAdapter);
-
-
     }
 
     @Override
@@ -68,6 +56,8 @@ public class LocalMusicFragment extends BaseFragment implements LocalIview.Local
 
     @Override
     public void initData() {
+        mLibraryPresenter = new LocalLibraryPresenter(getActivity(), this);
+        mMusicPlaylist = new MusicPlaylist();
         mLibraryPresenter.requestMusic();
     }
 
@@ -78,9 +68,11 @@ public class LocalMusicFragment extends BaseFragment implements LocalIview.Local
 
     @Override
     public void getLocalMusic(List<Song> musics) {
-        mMusicPlaylist.addQueue(musics,true);
-        mMusicPlaylist.setTitle(getString(R.string.local_library));
-        mMusicAdapter.setData(musics);
+//        mMusicPlaylist.addQueue(musics,true);
+//        mMusicPlaylist.setTitle(getString(R.string.local_library));
+        mMusicAdapter = new LocalMusicListAdapter(getActivity());
+        mMusicAdapter.setSongs(musics);
+        mRecylerview.setAdapter(mMusicAdapter);
     }
 
 
