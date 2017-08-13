@@ -5,9 +5,9 @@
              tools:context="com.cainiao.music.cniaomusic.ui.cnmusic.LocalAlbumFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment"/>
+        android:layout_height="200dp"/>
 
 </FrameLayout>

@@ -103,7 +103,7 @@ public class LocalMusicListAdapter extends RecyclerView.Adapter<LocalMusicListAd
                 public void onClick(View view) {
                     Song song = songs.get(getAdapterPosition());
                     if(mItemClickListener != null && song.isStatus()){
-                        mItemClickListener.onItemSettingClick(setting,song,getAdapterPosition());
+                        mItemClickListener.onItemClick(song,getAdapterPosition());
                     }
                 }
             });
