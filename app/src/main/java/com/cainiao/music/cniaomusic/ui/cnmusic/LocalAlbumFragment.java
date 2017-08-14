@@ -1,94 +1,56 @@
 package com.cainiao.music.cniaomusic.ui.cnmusic;
 
-import android.os.Handler;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.cainiao.music.cniaomusic.R;
+import com.cainiao.music.cniaomusic.data.Album;
+import com.cainiao.music.cniaomusic.data.Song;
+import com.cainiao.music.cniaomusic.ui.adapter.LocalMusicListAdapter;
 import com.cainiao.music.cniaomusic.ui.base.BaseFragment;
+import com.cainiao.music.cniaomusic.ui.model.LocalIview;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.InjectView;
 
 
-public class LocalAlbumFragment extends BaseFragment {
+public class LocalAlbumFragment extends BaseFragment implements LocalIview.LocalMusic {
 
-    @InjectView(R.id.viewpager)
-    ViewPager mViewpager;
-
-    private int index;
-
-    private List<ImageView> mImageViews;
-    private int[] images = {R.drawable.image_1, R.drawable.image_2, R.drawable.image_3, R.drawable.image_4, R
-            .drawable.image_5};
-
-    private Handler mHandler = new Handler();
-    private Runnable mRunnable = new Runnable() {
-        @Override
-        public void run() {
-            index++;
-            mViewpager.setCurrentItem(index);
-            mHandler.postDelayed(mRunnable, 2000);
-        }
-    };
-    private MyAdapter mAdapter;
+    @InjectView(R.id.local_recylerview)
+    RecyclerView mRecylerview;
 
 
-    public static LocalAlbumFragment newInstance() {
+    private LocalLibraryPresenter mLibraryPresenter;
+    private LocalMusicListAdapter mMusicAdapter;
+
+    public static LocalAlbumFragment newInstance(){
         return new LocalAlbumFragment();
     }
 
     @Override
     public int getLayoutId() {
-        return R.layout.fragment_local_album;
+        return R.layout.fragment_local_music;
     }
 
     @Override
     public void initViews() {
-
+        mRecylerview.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
     @Override
     public void setListener() {
-        mViewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                index = position;
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
 
     }
 
     @Override
     public void initData() {
-        mImageViews = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            ImageView iv = new ImageView(mContext);
-            iv.setScaleType(ImageView.ScaleType.FIT_XY);
-            mImageViews.add(iv);
-            iv.setImageResource(images[i]);
-        }
-        mAdapter = new MyAdapter();
-        mViewpager.setAdapter(mAdapter);
-
-        mHandler.removeCallbacks(mRunnable);
-        mHandler.post(mRunnable);
+        mLibraryPresenter = new LocalLibraryPresenter(getActivity(),this);
+        mLibraryPresenter.requestMusic();
     }
 
     @Override
@@ -96,36 +58,50 @@ public class LocalAlbumFragment extends BaseFragment {
 
     }
 
-    private class MyAdapter extends PagerAdapter {
-
-        @Override
-        public int getCount() {
-            return Integer.MAX_VALUE;
-//            return mImageViews == null ? 0 : mImageViews.size();
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return view == object;
-        }
-
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView(mImageViews.get(position % mImageViews.size()));
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            container.addView(mImageViews.get(position % mImageViews.size()));
-            return mImageViews.get(position % mImageViews.size());
-        }
-
-    }
-
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mHandler.removeCallbacks(mRunnable);
+    public void getLocalMusic(List<Song> musics) {
+        List<String> albumNames = new ArrayList<>();
+        Map<String, Integer> songCount = new HashMap<>();
+        Map<String, Integer> yesrs = new HashMap<>();
+        Map<String, Long> albumIds = new HashMap<>();
+        Map<String, Long> artistIds = new HashMap<>();
+        Map<String,String> covers = new HashMap<>();
+        Map<String,String> artistNames = new HashMap<>();
+
+
+        for (int i = 0, j = musics.size(); i < j; i++) {
+            String albumName = musics.get(i).getAlbumName();
+            if (!albumNames.contains(albumName)) {
+                albumNames.add(albumName);
+                songCount.put(albumName, 1);
+                albumIds.put(albumName,musics.get(i).getAlbumId());
+                artistIds.put(albumName,musics.get(i).getArtistId());
+                yesrs.put(albumName,musics.get(i).getDuration());
+                covers.put(albumName,musics.get(i).getCoverUrl());
+                artistNames.put(albumName,musics.get(i).getArtistName());
+            } else {
+                Integer integer = songCount.get(albumName);
+                songCount.put(albumName, integer + 1);
+            }
+        }
+
+
+        List<Album> list = new ArrayList<>();
+        for (int i = 0, j = albumNames.size(); i < j; i++){
+            String title = albumNames.get(i);
+            long albumId = albumIds.get(title);
+            long artistId = artistIds.get(title);
+            int count = songCount.get(title);
+            int year = yesrs.get(title);
+            String artistName = artistNames.get(title);
+            String cover = covers.get(title);
+
+            Album album = new Album(albumId,title,artistName,artistId,count,year,cover);
+            list.add(album);
+        }
+
+        mMusicAdapter = new LocalMusicListAdapter(getActivity());
+        mMusicAdapter.setAlbums(list);
+        mRecylerview.setAdapter(mMusicAdapter);
     }
 }

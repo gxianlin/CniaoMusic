@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.cainiao.music.cniaomusic.R;
+import com.cainiao.music.cniaomusic.data.Album;
+import com.cainiao.music.cniaomusic.data.Artist;
 import com.cainiao.music.cniaomusic.data.Song;
 
 import java.util.ArrayList;
@@ -27,15 +29,28 @@ import java.util.List;
  * 邮箱：gong.xl@wonhigh.cn
  */
 
-public class LocalMusicListAdapter extends RecyclerView.Adapter<LocalMusicListAdapter.LocalMusicViewHolder>{
+public class LocalMusicListAdapter extends RecyclerView.Adapter<LocalMusicListAdapter.LocalMusicViewHolder> {
 
+    private int type;
     private Context context;
     private List<Song> songs;
+    private List<Artist> mArtists;
+    private List<Album> mAlbumList;
     private OnItemClickListener<Song> mItemClickListener;
 
-    public LocalMusicListAdapter(Context context){
+    public LocalMusicListAdapter(Context context) {
         this.context = context;
         songs = new ArrayList<>();
+        mArtists = new ArrayList<>();
+        mAlbumList = new ArrayList<>();
+    }
+
+    public LocalMusicListAdapter(Context context,int type ,List<Artist> mArtists) {
+        this.context = context;
+        this.type = type;
+        this.mArtists=mArtists;
+        songs = new ArrayList<>();
+        mAlbumList = new ArrayList<>();
     }
 
     @Override
@@ -46,11 +61,76 @@ public class LocalMusicListAdapter extends RecyclerView.Adapter<LocalMusicListAd
 
     @Override
     public void onBindViewHolder(LocalMusicViewHolder holder, int position) {
+        switch (type) {
+            case 0:
+                setSingleSong(holder, position);
+                break;
+            case 1:
+                setArtist(holder, position);
+                break;
+            case 2:
+                setSpecial(holder, position);
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 设置专辑页面
+     *
+     * @param holder
+     * @param position
+     */
+    private void setSpecial(LocalMusicViewHolder holder, int position) {
+        if (mAlbumList == null || mAlbumList.isEmpty()) {
+            return;
+        }
+        Album album = mAlbumList.get(position);
+        holder.title.setText(album.title);
+        holder.detail.setText(album.songCount + "首  " + album.artistName);
+
+        Glide.with(context)
+                .load(album.cover)
+                .placeholder(R.drawable.cover)
+                .into(holder.cover);
+    }
+
+    /**
+     * 设置歌手页面
+     *
+     * @param holder
+     * @param position
+     */
+    private void setArtist(LocalMusicViewHolder holder, int position) {
+        if (mArtists == null || mArtists.isEmpty()) {
+            return;
+        }
+        Artist artist = mArtists.get(position);
+        holder.title.setText(artist.name);
+        holder.detail.setText(artist.songCount+"首");
+        Glide.with(context)
+                .load(artist.iconUrl)
+                .placeholder(R.drawable.cover)
+                .into(holder.cover);
+    }
+
+    /**
+     * 单曲页面显示
+     *
+     * @param holder
+     * @param position
+     */
+    private void setSingleSong(LocalMusicViewHolder holder, int position) {
+        if (songs == null || songs.isEmpty()) {
+            return;
+        }
+
         final Song song = songs.get(position);
         holder.title.setText(Html.fromHtml(song.getTitle()));
-        if(TextUtils.isEmpty(song.getArtistName())){
+        if (TextUtils.isEmpty(song.getArtistName())) {
             holder.detail.setText(R.string.music_unknown);
-        }else{
+        } else {
             holder.detail.setText(song.getArtistName());
         }
         Glide.with(context)
@@ -61,22 +141,54 @@ public class LocalMusicListAdapter extends RecyclerView.Adapter<LocalMusicListAd
 
     @Override
     public int getItemCount() {
-        return songs.size();
+        switch (type) {
+            case 0:
+                return songs.size();
+            case 1:
+                return mArtists.size();
+            case 2:
+                return mAlbumList.size();
+            default:
+                return 0;
+        }
+
+    }
+
+
+    /***
+     * 设置歌曲列表
+     * @param songs
+     */
+    public void setSongs(List<Song> songs) {
+        this.songs = songs;
+        this.type = 0;
+        notifyDataSetChanged();
     }
 
     /***
-     * 传递歌曲列表
-     * @param songs
+     * 设置歌手列标普
+     * @param artists
      */
-    public void setData(List<Song> songs){
-        this.songs = songs;
+    public void setArtists(List<Artist> artists) {
+        this.mArtists = artists;
+        this.type = 1;
+        notifyDataSetChanged();
+    }
+
+    /***
+     * 设置专辑列表
+     * @param alba
+     */
+    public void setAlbums(List<Album> alba) {
+        this.mAlbumList = alba;
+        this.type = 2;
         notifyDataSetChanged();
     }
 
     public class LocalMusicViewHolder extends RecyclerView.ViewHolder {
 
         public View musicLayout;
-        public TextView title,detail;
+        public TextView title, detail;
         public ImageView cover;
         public AppCompatImageView setting;
 
@@ -91,9 +203,13 @@ public class LocalMusicListAdapter extends RecyclerView.Adapter<LocalMusicListAd
             setting.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Song song = songs.get(getAdapterPosition());
-                    if(mItemClickListener != null && song.isStatus()){
-                        mItemClickListener.onItemSettingClick(setting,song,getAdapterPosition());
+                    if (mItemClickListener != null ) {
+                        if (type==0) {
+                            Song song = songs.get(getAdapterPosition());
+                            if (song.isStatus()) {
+                                mItemClickListener.onItemSettingClick(setting, song, getAdapterPosition());
+                            }
+                        }
                     }
                 }
             });
@@ -104,17 +220,25 @@ public class LocalMusicListAdapter extends RecyclerView.Adapter<LocalMusicListAd
                     Song song = songs.get(getAdapterPosition());
                     if(mItemClickListener != null && song.isStatus()){
                         mItemClickListener.onItemClick(song,getAdapterPosition());
+                    if (mItemClickListener != null ) {
+                        if (type==0) {
+                            Song song = songs.get(getAdapterPosition());
+                            if (song.isStatus()) {
+                                mItemClickListener.onItemSettingClick(setting, song, getAdapterPosition());
+                            }
+                        }
                     }
                 }
             });
 
         }
     }
-    public void setItemClickListener(OnItemClickListener itemClickListener){
+
+    public void setItemClickListener(OnItemClickListener itemClickListener) {
         this.mItemClickListener = itemClickListener;
     }
 
-    public OnItemClickListener getItemClickListener(){
+    public OnItemClickListener getItemClickListener() {
         return mItemClickListener;
     }
 }

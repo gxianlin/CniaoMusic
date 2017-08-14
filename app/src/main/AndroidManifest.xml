@@ -55,6 +55,8 @@
         </receiver>
 
 
+        <activity android:name=".ui.cnmusic.AlbumArtistActivity">
+        </activity>
     </application>
 
 </manifest>

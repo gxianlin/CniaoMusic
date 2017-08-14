@@ -56,8 +56,8 @@ public class LocalMusicActivity extends BaseAvtivity {
     public void initData() {
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(LocalMusicFragment.newInstance());
+        fragments.add(LocalArtistFragment.newInstance());
         fragments.add(LocalAlbumFragment.newInstance());
-        fragments.add(LocalSingerFragment.newInstance());
         TabFragmentAdapter fragmentAdapter = new TabFragmentAdapter(getSupportFragmentManager(),fragments);
         fragmentAdapter.setTitles(new String[]{"单曲","歌手","专辑"});
         mViewpager.setAdapter(fragmentAdapter);
