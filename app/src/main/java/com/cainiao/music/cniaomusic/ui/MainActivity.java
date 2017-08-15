@@ -19,9 +19,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +30,7 @@ import com.cainiao.music.cniaomusic.ui.cnmusic.SearchActivity;
 import com.cainiao.music.cniaomusic.ui.friends.FriendsFragment;
 import com.cainiao.music.cniaomusic.ui.radio.RadioFragment;
 import com.cainiao.music.cniaomusic.ui.widget.CircleImageView;
+import com.lapism.searchview.SearchView;
 
 import java.util.ArrayList;
 
@@ -47,6 +46,21 @@ import magicasakura.widgets.TintToolbar;
  */
 public class MainActivity extends SearchActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    //    ImageView mBarNet;
+    //    ImageView mBarMusic;
+    //    ImageView mBarFriends;
+    //    ImageView mBarSearch;
+    //    TintToolbar mToolbar;
+    //    ViewPager mCustomViewpager;
+    //    NavigationView navigationView;
+    //    DrawerLayout mDrawerLayout;
+    //    ImageView mBarMenu;
+
+    CircleImageView avatar;
+    TextView nicknameTv;
+    TextView aboutTv;
+    @InjectView(R.id.bar_menu)
+    ImageView mBarMenu;
     @InjectView(R.id.bar_net)
     ImageView mBarNet;
     @InjectView(R.id.bar_music)
@@ -58,21 +72,13 @@ public class MainActivity extends SearchActivity implements NavigationView.OnNav
     @InjectView(R.id.toolbar)
     TintToolbar mToolbar;
     @InjectView(R.id.main_viewpager)
-    ViewPager mCustomViewpager;
-    @InjectView(R.id.bottom_container)
-    FrameLayout mBottomContainer;
-    @InjectView(R.id.a)
-    RelativeLayout mA;
+    ViewPager mMainViewpager;
+    @InjectView(R.id.searchView)
+    SearchView mSearchView;
     @InjectView(R.id.navigation)
-    NavigationView navigationView;
+    NavigationView mNavigation;
     @InjectView(R.id.drawerLayout)
     DrawerLayout mDrawerLayout;
-    @InjectView(R.id.bar_menu)
-    ImageView mBarMenu;
-
-    CircleImageView avatar;
-    TextView nicknameTv;
-    TextView aboutTv;
 
     private ActionBar mActionBar;
     private ArrayList<ImageView> tabs = new ArrayList<>();
@@ -92,7 +98,7 @@ public class MainActivity extends SearchActivity implements NavigationView.OnNav
 
     @Override
     public void setListener() {
-        mCustomViewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mMainViewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -160,29 +166,8 @@ public class MainActivity extends SearchActivity implements NavigationView.OnNav
         myPagerAdapter.addFragment(radioFragment);
         myPagerAdapter.addFragment(friendsFragment);
 
-        mCustomViewpager.setAdapter(myPagerAdapter);
-        mCustomViewpager.setCurrentItem(1);
-    }
-
-    @OnClick({R.id.bar_menu, R.id.bar_net, R.id.bar_music, R.id.bar_friends, R.id.bar_search})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.bar_menu:
-                mDrawerLayout.openDrawer(Gravity.START);
-                break;
-            case R.id.bar_net:
-                mCustomViewpager.setCurrentItem(0);
-                break;
-            case R.id.bar_music:
-                mCustomViewpager.setCurrentItem(1);
-                break;
-            case R.id.bar_friends:
-                mCustomViewpager.setCurrentItem(2);
-                break;
-            case R.id.bar_search:
-                //跳转搜索页面
-                break;
-        }
+        mMainViewpager.setAdapter(myPagerAdapter);
+        mMainViewpager.setCurrentItem(1);
     }
 
     /***
@@ -206,13 +191,13 @@ public class MainActivity extends SearchActivity implements NavigationView.OnNav
             }
         };
 
-        toggle.syncState();
-        mDrawerLayout.addDrawerListener(toggle);
-        navigationView.setNavigationItemSelectedListener(this);
+        //        toggle.syncState();
+        //        mDrawerLayout.addDrawerListener(toggle);
+        mNavigation.setNavigationItemSelectedListener(this);
 
-        avatar = (CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.drawer_avatar);
-        nicknameTv = (TextView) navigationView.getHeaderView(0).findViewById(R.id.drawer_nickname);
-        aboutTv = (TextView) navigationView.getHeaderView(0).findViewById(R.id.drawer_about);
+        avatar = (CircleImageView) mNavigation.getHeaderView(0).findViewById(R.id.drawer_avatar);
+        nicknameTv = (TextView) mNavigation.getHeaderView(0).findViewById(R.id.drawer_nickname);
+        aboutTv = (TextView) mNavigation.getHeaderView(0).findViewById(R.id.drawer_about);
         avatar.setOnClickListener(this);
     }
 
@@ -281,6 +266,33 @@ public class MainActivity extends SearchActivity implements NavigationView.OnNav
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+
+
+    @OnClick({R.id.bar_menu, R.id.bar_net, R.id.bar_music, R.id.bar_friends, R.id.bar_search})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.bar_menu:
+                mDrawerLayout.openDrawer(Gravity.START);
+                break;
+            case R.id.bar_net:
+                mMainViewpager.setCurrentItem(0);
+                break;
+            case R.id.bar_music:
+                mMainViewpager.setCurrentItem(1);
+                break;
+            case R.id.bar_friends:
+                mMainViewpager.setCurrentItem(1);
+                break;
+            case R.id.bar_search:
+                break;
+        }
+    }
+
 
     class MyPagerAdapter extends FragmentPagerAdapter {
         ArrayList<Fragment> mFragments = new ArrayList<>();

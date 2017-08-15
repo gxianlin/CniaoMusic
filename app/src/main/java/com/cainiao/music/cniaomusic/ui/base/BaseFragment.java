@@ -122,8 +122,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
      * 跳转页面
      */
     public void startToActivity(Class activity) {
-        Intent intent = new Intent();
-        intent.setClass(getActivity(), activity);
+        Intent intent = new Intent(getActivity(), activity);
         startActivity(intent);
     }
 
