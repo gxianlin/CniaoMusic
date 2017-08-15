@@ -8,6 +8,12 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
 import android.view.View;
+import android.widget.Toast;
+
+import com.cainiao.music.cniaomusic.R;
+import com.cainiao.music.cniaomusic.service.MusicPlayerManager;
+import com.cainiao.music.cniaomusic.service.MusicServiceHelper;
+import com.cainiao.music.cniaomusic.ui.play.PlayActivity;
 
 import butterknife.ButterKnife;
 
@@ -37,20 +43,23 @@ public abstract class BaseAvtivity extends AppCompatActivity implements View.OnC
     public abstract void initViews();
 
     /**
+     * 初始化数据
+     */
+    public abstract void initData();
+
+    /**
      * 设置控件监听事件
      */
     public abstract void setListener();
 
-    /**
-     * 初始化数据
-     */
-    public abstract void initData();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mViews = new SparseArray<>();
+        //开启服务
+        MusicServiceHelper.get(getApplicationContext()).initService();
         setContentView(getLayoutId());
         ButterKnife.inject(this);
         receiveData();
@@ -105,6 +114,19 @@ public abstract class BaseAvtivity extends AppCompatActivity implements View.OnC
         return view;
     }
 
+    public boolean goToSongPlayActivity(){
+        if (MusicPlayerManager.getInstance().getPlayingSong() == null){
+            showToast(R.string.music_playing_none);
+            return false;
+        }
+
+        PlayActivity.open(this);
+        return true;
+    }
+
+    public void showToast(int toastRes){
+        Toast.makeText(this, getString(toastRes), Toast.LENGTH_SHORT).show();
+    }
     /**
      * 设置view的点击事件
      *
@@ -118,6 +140,12 @@ public abstract class BaseAvtivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unbindService();
         ButterKnife.reset(this);
     }
+
+    private void unbindService() {
+
+    }
+
 }

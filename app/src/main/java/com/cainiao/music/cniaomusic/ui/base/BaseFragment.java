@@ -1,5 +1,6 @@
 package com.cainiao.music.cniaomusic.ui.base;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +9,11 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.cainiao.music.cniaomusic.R;
+import com.cainiao.music.cniaomusic.service.MusicPlayerManager;
+import com.cainiao.music.cniaomusic.ui.play.PlayActivity;
 
 import butterknife.ButterKnife;
 
@@ -21,6 +27,7 @@ import butterknife.ButterKnife;
  */
 public abstract class BaseFragment extends Fragment implements View.OnClickListener {
     protected final String TAG = BaseFragment.class.getSimpleName();
+    protected Context mContext;
 
     private boolean isVisible = false;
     private boolean isInitView = false;
@@ -53,6 +60,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         receiveData();
+        mContext = getContext();
     }
 
     @Nullable
@@ -130,6 +138,19 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.reset(this);
+    }
+
+    public boolean goToSongPlayActivity(){
+        if (MusicPlayerManager.getInstance().getPlayingSong() == null){
+            showToast(R.string.music_playing_none);
+            return false;
+        }
+
+        PlayActivity.open(mContext);
+        return true;
+    }
+    public void showToast(int toastRes){
+        Toast.makeText(mContext, getString(toastRes), Toast.LENGTH_SHORT).show();
     }
     /**
      * 设置view的点击事件

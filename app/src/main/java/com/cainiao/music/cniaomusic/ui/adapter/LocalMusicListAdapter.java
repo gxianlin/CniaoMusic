@@ -217,6 +217,9 @@ public class LocalMusicListAdapter extends RecyclerView.Adapter<LocalMusicListAd
             musicLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Song song = songs.get(getAdapterPosition());
+                    if(mItemClickListener != null && song.isStatus()){
+                        mItemClickListener.onItemClick(song,getAdapterPosition());
                     if (mItemClickListener != null ) {
                         if (type==0) {
                             Song song = songs.get(getAdapterPosition());

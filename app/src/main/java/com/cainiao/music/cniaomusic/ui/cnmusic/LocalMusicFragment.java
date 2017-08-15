@@ -1,5 +1,8 @@
 package com.cainiao.music.cniaomusic.ui.cnmusic;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -7,7 +10,10 @@ import android.view.View;
 import com.cainiao.music.cniaomusic.R;
 import com.cainiao.music.cniaomusic.data.Song;
 import com.cainiao.music.cniaomusic.music.MusicPlaylist;
+import com.cainiao.music.cniaomusic.service.MusicPlayerManager;
+import com.cainiao.music.cniaomusic.ui.play.PlayActivity;
 import com.cainiao.music.cniaomusic.ui.adapter.LocalMusicListAdapter;
+import com.cainiao.music.cniaomusic.ui.adapter.OnItemClickListener;
 import com.cainiao.music.cniaomusic.ui.base.BaseFragment;
 import com.cainiao.music.cniaomusic.ui.model.LocalIview;
 
@@ -23,7 +29,7 @@ import butterknife.InjectView;
  * 修改备注：
  * 邮箱：gong.xl@wonhigh.cn
  */
-public class LocalMusicFragment extends BaseFragment implements LocalIview.LocalMusic {
+public class LocalMusicFragment extends BaseFragment implements LocalIview.LocalMusic, OnItemClickListener {
 
     @InjectView(R.id.local_recylerview)
     RecyclerView mRecylerview;
@@ -38,6 +44,12 @@ public class LocalMusicFragment extends BaseFragment implements LocalIview.Local
         return fragment;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mLibraryPresenter = new LocalLibraryPresenter(getActivity(), this);
+        mMusicPlaylist = new MusicPlaylist();
+    }
 
     @Override
     public int getLayoutId() {
@@ -46,18 +58,19 @@ public class LocalMusicFragment extends BaseFragment implements LocalIview.Local
 
     @Override
     public void initViews() {
+        mMusicAdapter = new LocalMusicListAdapter(getActivity());
         mRecylerview.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecylerview.setAdapter(mMusicAdapter);
     }
 
     @Override
     public void setListener() {
+        mMusicAdapter.setItemClickListener(this);
 
     }
 
     @Override
     public void initData() {
-        mLibraryPresenter = new LocalLibraryPresenter(getActivity(), this);
-        mMusicPlaylist = new MusicPlaylist();
         mLibraryPresenter.requestMusic();
     }
 
@@ -68,12 +81,22 @@ public class LocalMusicFragment extends BaseFragment implements LocalIview.Local
 
     @Override
     public void getLocalMusic(List<Song> musics) {
-//        mMusicPlaylist.addQueue(musics,true);
-//        mMusicPlaylist.setTitle(getString(R.string.local_library));
-        mMusicAdapter = new LocalMusicListAdapter(getActivity());
-        mMusicAdapter.setSongs(musics);
-        mRecylerview.setAdapter(mMusicAdapter);
+        mMusicPlaylist.addQueue(musics,true);
+        mMusicPlaylist.setTitle(getString(R.string.local_library));
+        mMusicAdapter.setData(musics);
     }
 
 
+    @Override
+    public void onItemClick(Object item, int position) {
+        MusicPlayerManager.getInstance().playQueue(mMusicPlaylist,position);
+        goToSongPlayActivity();
+    }
+
+    @Override
+    public void onItemSettingClick(View v, Object item, int position) {
+        Intent intent = new Intent(getActivity(),PlayActivity.class);
+        intent.putExtra("index",position);
+        startActivity(intent);
+    }
 }
