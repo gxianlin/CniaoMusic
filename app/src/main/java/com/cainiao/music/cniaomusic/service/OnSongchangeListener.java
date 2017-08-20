@@ -1,5 +1,7 @@
 package com.cainiao.music.cniaomusic.service;
 
+import com.cainiao.music.cniaomusic.data.Song;
+
 /**
  * 描述：TODO
  * 作者：gong.xl
@@ -9,7 +11,7 @@ package com.cainiao.music.cniaomusic.service;
  * 邮箱：gong.xl@wonhigh.cn
  */
 
-public interface ISongChange {
-
+public interface OnSongchangeListener {
+    void onSongChanged(Song song);
 
 }

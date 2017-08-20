@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.Spanned;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,6 +18,7 @@ import com.cainiao.music.cniaomusic.R;
 import com.cainiao.music.cniaomusic.common.utils.ImageUtils;
 import com.cainiao.music.cniaomusic.data.Song;
 import com.cainiao.music.cniaomusic.service.MusicPlayerManager;
+import com.cainiao.music.cniaomusic.service.OnSongchangeListener;
 import com.cainiao.music.cniaomusic.ui.base.BaseAvtivity;
 
 import java.text.DecimalFormat;
@@ -34,7 +38,7 @@ import rx.functions.Action1;
  * 修改备注：
  * 邮箱：gong.xl@wonhigh.cn
  */
-public class PlayActivity extends BaseAvtivity {
+public class PlayActivity extends BaseAvtivity implements OnSongchangeListener {
 
     @InjectView(R.id.music_duration_played)
     TextView mMusicDurationPlayed;
@@ -56,11 +60,13 @@ public class PlayActivity extends BaseAvtivity {
     ImageView mNeedle;
 
     private int index;
+    private Song mSong;
 
 
     @Override
     protected void receiveData() {
         index = getIntent().getIntExtra("index", 0);
+
         Log.e("tag", "index=" + index);
     }
 
@@ -73,14 +79,13 @@ public class PlayActivity extends BaseAvtivity {
     public void initViews() {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
     }
 
 
     @Override
     public void initData() {
-        if (MusicPlayerManager.getInstance().getPlayingSong() == null) {
+        mSong = MusicPlayerManager.getInstance().getPlayingSong();
+        if (mSong == null) {
             finish();
         }
 
@@ -101,6 +106,9 @@ public class PlayActivity extends BaseAvtivity {
 
     @Override
     public void setListener() {
+        //设置歌曲改变监听
+        MusicPlayerManager.getInstance().registerListener(this);
+
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,7 +121,7 @@ public class PlayActivity extends BaseAvtivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 //seekBar有两种进度改变的方式:1.人为拖动;2.代码改变
                 if (fromUser) {
-//                    MusicPlayerManager.getInstance().seekTo(progress);
+                    MusicPlayerManager.getInstance().seekTo(progress);
                 }
             }
 
@@ -135,7 +143,6 @@ public class PlayActivity extends BaseAvtivity {
         switch (view.getId()) {
             case R.id.playing_pre:
                 MusicPlayerManager.getInstance().playPre();
-                updateData();
                 break;
             case R.id.playing_play:
                 if (MusicPlayerManager.getInstance().getState() == PlaybackStateCompat.STATE_PLAYING) {
@@ -151,7 +158,6 @@ public class PlayActivity extends BaseAvtivity {
                 break;
             case R.id.playing_next:
                 MusicPlayerManager.getInstance().playNext();
-                updateData();
                 break;
         }
     }
@@ -162,17 +168,17 @@ public class PlayActivity extends BaseAvtivity {
      */
     private void updateProgress() {
         //更新进度条
-        Observable.interval(1000, TimeUnit.MICROSECONDS)
+        Observable.interval(1000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Long>() {
                     @Override
                     public void call(Long aLong) {
                         mPlaySeek.setMax(MusicPlayerManager.getInstance().getCurrentMaxDuration());
                         mPlaySeek.setProgress(MusicPlayerManager.getInstance().getCurrentPosition());
-                        mMusicDuration.setText(formatChange(MusicPlayerManager.getInstance().getCurrentMaxDuration()));
-                        mMusicDurationPlayed.setText(formatChange(MusicPlayerManager.getInstance().getCurrentPosition
-                                ()));
-
+                        mMusicDuration.setText(formatChange(
+                                MusicPlayerManager.getInstance().getCurrentMaxDuration()));
+                        mMusicDurationPlayed.setText(formatChange(
+                                MusicPlayerManager.getInstance().getCurrentPosition()));
                     }
                 }, new Action1<Throwable>() {
                     @Override
@@ -186,14 +192,23 @@ public class PlayActivity extends BaseAvtivity {
      * 更新数据:封面,标题,图标,歌词等
      */
     private void updateData() {
-        //获取当前播放的歌曲
-        Song playingSong = MusicPlayerManager.getInstance().getPlayingSong();
+
         //歌曲封面
-        String coverUrl = playingSong.getCoverUrl();
+        String coverUrl = mSong.getCoverUrl();
         ImageUtils.GlideWith(this, coverUrl, R.drawable.ah1, mCoverImage);
 
+        //设置标题
+        if(!TextUtils.isEmpty(mSong.getAlbumName())){
+            String title = mSong.getAlbumName();
+            Spanned s = Html.fromHtml(title);
+            getSupportActionBar().setTitle(s);
+        }
         //歌曲名称
-        mToolbar.setTitle(playingSong.getTitle());
+        mToolbar.setTitle(mSong.getTitle());
+
+        if(MusicPlayerManager.getInstance().getPlayingSong() != null){
+            mPlayingPlay.setImageResource(R.drawable.play_rdi_btn_pause);
+        }
     }
 
 
@@ -220,4 +235,9 @@ public class PlayActivity extends BaseAvtivity {
         context.startActivity(intent);
     }
 
+    @Override
+    public void onSongChanged(Song song) {
+        this.mSong = song;
+        updateData();
+    }
 }

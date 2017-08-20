@@ -76,6 +76,35 @@ public abstract class BaseAvtivity extends AppCompatActivity implements View.OnC
     }
 
     /**
+     * 跳转到音乐播放界面
+     * @return
+     */
+    public boolean gotoSongPlayerActivity() {
+        if (MusicPlayerManager.getInstance().getPlayingSong() == null) {
+            showToast(R.string.music_playing_none);
+            return false;
+        }
+        PlayActivity.open(this);
+        return true;
+    }
+
+    /**
+     * @param outState 取消保存状态
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //super.onSaveInstanceState(outState);
+    }
+
+    /**
+     * @param savedInstanceState 取消保存状态
+     */
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        //super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    /**
      * 显示Snackbar
      *
      * @param view

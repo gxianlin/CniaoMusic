@@ -11,6 +11,7 @@ import com.cainiao.music.cniaomusic.data.Song;
 import com.cainiao.music.cniaomusic.music.MusicPlaylist;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 
@@ -40,6 +41,7 @@ public class MusicPlayerManager implements MediaPlayer.OnPreparedListener,
     public static final int MAX_DURATION_FOR_REPEAT = 3000;
     private int currentMaxDuration = MAX_DURATION_FOR_REPEAT;
 
+    private ArrayList<OnSongchangeListener> changeListeners = new ArrayList<>();
 
     private MusicPlayerManager() {
     }
@@ -135,6 +137,10 @@ public class MusicPlayerManager implements MediaPlayer.OnPreparedListener,
                 mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 mMediaPlayer.setDataSource(mContext, song.getUri());
                 mMediaPlayer.prepareAsync();
+
+                for (OnSongchangeListener l : changeListeners){
+                    l.onSongChanged(song);
+                }
 
             } catch (IOException e) {
                 Log.e("tag", "playing song:", e);
@@ -404,6 +410,26 @@ public class MusicPlayerManager implements MediaPlayer.OnPreparedListener,
     private void giveUpAudioFocus() {
     }
 
+    /***
+     * 获取播放列表
+     *
+     * @return
+     */
+    public MusicPlaylist getMusicPlaylist() {
+        return mMusicPlaylist;
+    }
+
+    /***
+     * 设置播放列表
+     *
+     * @param musicPlaylist
+     */
+    public void setMusicPlaylist(MusicPlaylist musicPlaylist) {
+        this.mMusicPlaylist = musicPlaylist;
+    }
+
+
+
     /**
      * 释放资源服务用于回放。这包括“前台服务”的地位和可能的媒体播放器。
      *
@@ -418,5 +444,14 @@ public class MusicPlayerManager implements MediaPlayer.OnPreparedListener,
             mMediaPlayer = null;
         }
     }
+
+    public void registerListener(OnSongchangeListener listener){
+        changeListeners.add(listener);
+    }
+
+    public void unregisterListener(OnSongchangeListener listener){
+        changeListeners.remove(listener);
+    }
+
 
 }

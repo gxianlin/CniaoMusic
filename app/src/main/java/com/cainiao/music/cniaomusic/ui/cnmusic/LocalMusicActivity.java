@@ -17,6 +17,7 @@ import butterknife.InjectView;
 
 public class LocalMusicActivity extends BaseAvtivity {
 
+
     @InjectView(R.id.toolbar)
     Toolbar mToolbar;
     @InjectView(R.id.tab_layout)

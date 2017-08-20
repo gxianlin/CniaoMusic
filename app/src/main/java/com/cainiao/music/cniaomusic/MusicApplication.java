@@ -16,9 +16,14 @@ import magicasakura.utils.ThemeUtils;
  * 创建时间:2017/7/3
  */
 public class MusicApplication extends Application implements ThemeUtils.switchColor{
+    private static MusicApplication instance;
+    public static MusicApplication getInstance(){
+        return instance;
+    }
     @Override
     public void onCreate() {
         super.onCreate();
+        instance = this;
         ThemeUtils.setSwitchColor(this);
     }
 

@@ -20,7 +20,9 @@
         <item name="colorPrimaryDark">@color/theme_color_Primary</item>
         <item name="android:windowTranslucentNavigation">true</item>
     </style>
-
+    <!--toolbar菜单按钮的颜色-->
+    <style name="ActionButton.Overflow" parent="android:style/Widget.Holo.Light.ActionButton.Overflow">
+    </style>
     <style name="MyOverflowStyle" parent="@android:style/Widget.ActionButton.Overflow">
         <item name="android:src">@drawable/actionbar_more</item>
     </style>
