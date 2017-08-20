@@ -48,5 +48,6 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
+    compile 'com.lb:materialdesigndialog:1.0.0'
     testCompile 'junit:junit:4.12'
 }

@@ -1,5 +1,7 @@
 package com.cainiao.music.cniaomusic.service;
 
+import android.support.v4.media.session.PlaybackStateCompat;
+
 import com.cainiao.music.cniaomusic.data.Song;
 
 /**
@@ -12,6 +14,9 @@ import com.cainiao.music.cniaomusic.data.Song;
  */
 
 public interface OnSongchangeListener {
+    //歌曲改变的回调
     void onSongChanged(Song song);
 
+    //歌曲后台改变的回调
+    void onPlayBackStateChanged(PlaybackStateCompat state);
 }

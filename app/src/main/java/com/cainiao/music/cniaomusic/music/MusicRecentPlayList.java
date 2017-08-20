@@ -38,7 +38,7 @@ public class MusicRecentPlayList {
     }
 
     //歌曲的添加
-    private void addPlaySong(Song song) {
+    public void addPlaySong(Song song) {
         queue.add(song);
         //
         for (int i = queue.size() - 1; i > 0; i--) {

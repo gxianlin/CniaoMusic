@@ -240,4 +240,9 @@ public class PlayActivity extends BaseAvtivity implements OnSongchangeListener {
         this.mSong = song;
         updateData();
     }
+
+    @Override
+    public void onPlayBackStateChanged(PlaybackStateCompat state) {
+
+    }
 }

@@ -12,6 +12,9 @@ import android.support.v4.media.session.MediaButtonReceiver;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
+import com.cainiao.music.cniaomusic.data.Song;
+import com.cainiao.music.cniaomusic.music.MusicRecentPlayList;
+
 /**
  * 描述：音乐播放服务
  * 1.开启服务
@@ -26,13 +29,24 @@ import android.support.v4.media.session.PlaybackStateCompat;
  * 修改备注：
  * 邮箱：gong.xl@wonhigh.cn
  */
-public class MusicService extends Service {
+public class MusicService extends Service implements OnSongchangeListener{
 
     public final Binder mBinder = new MyBinder();
 
     private MusicPlayerManager mPlayerManager;
     private MediaSessionCompat mMediaSession;
     private PlaybackStateCompat mState;
+
+    @Override
+    public void onSongChanged(Song song) {
+        //添加播放过的歌曲
+        MusicRecentPlayList.getInstance().addPlaySong(song);
+    }
+
+    @Override
+    public void onPlayBackStateChanged(PlaybackStateCompat state) {
+
+    }
 
     public class MyBinder extends Binder {
         public MusicService getMusicService() {

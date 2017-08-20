@@ -3,6 +3,7 @@ package com.cainiao.music.cniaomusic.ui.cnmusic;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,9 @@ import com.cainiao.music.cniaomusic.service.OnSongchangeListener;
 import com.cainiao.music.cniaomusic.ui.adapter.OnItemClickListener;
 import com.cainiao.music.cniaomusic.ui.adapter.RecentPlayAdapter;
 import com.cainiao.music.cniaomusic.ui.base.BaseAvtivity;
+import com.lb.materialdesigndialog.base.DialogBase;
+import com.lb.materialdesigndialog.base.DialogWithTitle;
+import com.lb.materialdesigndialog.impl.MaterialDialogNormal;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -161,6 +165,23 @@ public class RecentPlayListActivity extends BaseAvtivity implements OnSongchange
 
     @OnClick(R.id.btnRight)
     public void onClick() {
+        MaterialDialogNormal dialog = new MaterialDialogNormal(this);
+        dialog.setTitle("");
+        dialog.setMessage("清空全部最近播放歌曲?");
+        dialog.setNegativeButton("取消", new DialogWithTitle.OnClickListener() {
+            @Override
+            public void click(DialogBase dialog, View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setPositiveButton("确定", new DialogWithTitle.OnClickListener() {
+            @Override
+            public void click(DialogBase dialog, View view) {
+                MusicRecentPlayList.getInstance().clearRecentPlayList();
+                mPlayAdapter.notifyDataSetChanged();
+                dialog.dismiss();
+            }
+        });
 
     }
 
@@ -168,5 +189,10 @@ public class RecentPlayListActivity extends BaseAvtivity implements OnSongchange
     public void onSongChanged(Song song) {
         mPlayAdapter.setData(MusicRecentPlayList.getInstance().getQueue());
         musicPlaylist = new MusicPlaylist(MusicRecentPlayList.getInstance().getQueue());
+    }
+
+    @Override
+    public void onPlayBackStateChanged(PlaybackStateCompat state) {
+
     }
 }
