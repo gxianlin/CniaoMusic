@@ -101,7 +101,7 @@ public class LocalAlbumFragment extends BaseFragment implements LocalIview.Local
         }
 
         mMusicAdapter = new LocalMusicListAdapter(getActivity());
-        mMusicAdapter.setAlbums(list);
+//        mMusicAdapter.setAlbums(list);
         mRecylerview.setAdapter(mMusicAdapter);
     }
 }

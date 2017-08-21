@@ -97,7 +97,7 @@ public class LocalArtistFragment extends BaseFragment implements LocalIview.Loca
             Artist artist = new Artist(artistId,artistName,1,count,cover);
             list.add(artist);
         }
-        mMusicAdapter = new LocalMusicListAdapter(getActivity(),1,list);
+        mMusicAdapter = new LocalMusicListAdapter(getActivity());
         mRecylerview.setAdapter(mMusicAdapter);
     }
 }

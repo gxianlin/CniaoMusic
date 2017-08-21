@@ -5,6 +5,7 @@ import android.view.View;
 import com.cainiao.music.cniaomusic.R;
 import com.cainiao.music.cniaomusic.ui.base.BaseFragment;
 import com.cainiao.music.cniaomusic.ui.cnmusic.LocalMusicActivity;
+import com.cainiao.music.cniaomusic.ui.cnmusic.RecentPlayListActivity;
 
 import butterknife.OnClick;
 
@@ -43,14 +44,15 @@ public class RadioFragment extends BaseFragment {
 
     }
 
-    @Override
-    public void onClick(View v) {
-
-    }
-
-
-    @OnClick(R.id.local_music)
-    public void onClick() {
-        startToActivity(LocalMusicActivity.class);
+    @OnClick({R.id.local_music, R.id.recent_play})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.local_music:
+                startToActivity(LocalMusicActivity.class);
+                break;
+            case R.id.recent_play:
+                startToActivity(RecentPlayListActivity.class);
+                break;
+        }
     }
 }
