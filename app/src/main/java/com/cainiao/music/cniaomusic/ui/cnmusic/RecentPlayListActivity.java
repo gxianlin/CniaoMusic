@@ -3,7 +3,6 @@ package com.cainiao.music.cniaomusic.ui.cnmusic;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
@@ -45,7 +44,6 @@ public class RecentPlayListActivity extends BaseAvtivity implements OnSongchange
     @InjectView(R.id.recycler_view)
     RecyclerView mRecyclerView;
 
-    private ActionBar mActionBar;
     private RecentPlayAdapter mPlayAdapter;
     private MusicPlaylist musicPlaylist;
 
@@ -64,8 +62,13 @@ public class RecentPlayListActivity extends BaseAvtivity implements OnSongchange
     public void initViews() {
         initToolbar();
         mBtnRight.setText("清空");
-
         initRecyclerView();
+    }
+    private void initToolbar() {
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
+        getSupportActionBar().setTitle("最近播放");
     }
 
     private void initRecyclerView() {
@@ -131,14 +134,6 @@ public class RecentPlayListActivity extends BaseAvtivity implements OnSongchange
 
     }
 
-
-    private void initToolbar() {
-        setSupportActionBar(mToolbar);
-        mActionBar = getSupportActionBar();
-        mActionBar.setDisplayHomeAsUpEnabled(true);
-        mActionBar.setHomeButtonEnabled(true); //设置返回键可用
-        mActionBar.setTitle("最近播放");
-    }
 
     @Override
     public void initData() {

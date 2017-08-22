@@ -2,10 +2,16 @@ package com.cainiao.music.cniaomusic;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Environment;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 
 import com.cainiao.music.cniaomusic.common.utils.ThemeHelper;
+import com.facebook.cache.disk.DiskCacheConfig;
+import com.facebook.common.internal.Supplier;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.cache.MemoryCacheParams;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 
 import magicasakura.utils.ThemeUtils;
 
@@ -15,16 +21,20 @@ import magicasakura.utils.ThemeUtils;
  * 邮箱:gxianlin@126.com
  * 创建时间:2017/7/3
  */
-public class MusicApplication extends Application implements ThemeUtils.switchColor{
+public class MusicApplication extends Application implements ThemeUtils.switchColor {
+    private static int MAX_MEM = (int) Runtime.getRuntime().maxMemory() / 4;
     private static MusicApplication instance;
-    public static MusicApplication getInstance(){
+
+    public static MusicApplication getInstance() {
         return instance;
     }
+
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
         ThemeUtils.setSwitchColor(this);
+        Fresco.initialize(this, getConfigureCaches(this));
     }
 
     @Override
@@ -93,5 +103,43 @@ public class MusicApplication extends Application implements ThemeUtils.switchCo
                 return context.getResources().getIdentifier(theme, "color", getPackageName());
         }
         return -1;
+    }
+
+
+    private ImagePipelineConfig getConfigureCaches(Context context) {
+        final MemoryCacheParams bitmapCacheParams = new MemoryCacheParams(
+                MAX_MEM,// 内存缓存中总图片的最大大小,以字节为单位。
+                Integer.MAX_VALUE,// 内存缓存中图片的最大数量。
+                MAX_MEM,// 内存缓存中准备清除但尚未被删除的总图片的最大大小,以字节为单位。
+                Integer.MAX_VALUE,// 内存缓存中准备清除的总图片的最大数量。
+                Integer.MAX_VALUE / 10);// 内存缓存中单个图片的最大大小。
+
+        Supplier<MemoryCacheParams> mSupplierMemoryCacheParams = new Supplier<MemoryCacheParams>() {
+            @Override
+            public MemoryCacheParams get() {
+                return bitmapCacheParams;
+            }
+        };
+        ImagePipelineConfig.Builder builder = ImagePipelineConfig.newBuilder(context)
+                .setDownsampleEnabled(true);
+        builder.setBitmapMemoryCacheParamsSupplier(mSupplierMemoryCacheParams);
+
+
+        //小图片的磁盘配置
+        DiskCacheConfig diskSmallCacheConfig = DiskCacheConfig.newBuilder(context)
+                .setBaseDirectoryPath(context.getApplicationContext().getCacheDir())//缓存图片基路径
+                .build();
+
+        //默认图片的磁盘配置
+        DiskCacheConfig diskCacheConfig = DiskCacheConfig.newBuilder(context)
+                .setBaseDirectoryPath(Environment.getExternalStorageDirectory().getAbsoluteFile())//缓存图片基路径
+                .build();
+
+        //缓存图片配置
+        ImagePipelineConfig.Builder configBuilder = ImagePipelineConfig.newBuilder(context)
+                .setBitmapMemoryCacheParamsSupplier(mSupplierMemoryCacheParams)//内存缓存配置（一级缓存，已解码的图片）
+                .setMainDiskCacheConfig(diskCacheConfig)//磁盘缓存配置（总，三级缓存）
+                ;
+        return builder.build();
     }
 }

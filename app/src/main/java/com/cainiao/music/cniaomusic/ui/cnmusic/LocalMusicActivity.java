@@ -3,7 +3,6 @@ package com.cainiao.music.cniaomusic.ui.cnmusic;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.cainiao.music.cniaomusic.R;
@@ -14,12 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.InjectView;
+import magicasakura.widgets.TintToolbar;
 
 public class LocalMusicActivity extends BaseAvtivity {
 
 
     @InjectView(R.id.toolbar)
-    Toolbar mToolbar;
+    TintToolbar mToolbar;
     @InjectView(R.id.tab_layout)
     TabLayout mTabLayout;
     @InjectView(R.id.viewpager)

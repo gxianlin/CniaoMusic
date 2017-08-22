@@ -8,12 +8,12 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <android.support.design.widget.AppBarLayout
+    <magicasakura.widgets.TintAppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar
+        <magicasakura.widgets.TintToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
@@ -30,7 +30,7 @@
             app:tabSelectedTextColor="@color/theme_color_Primary"
             app:tabTextColor="@color/black_alpha_more"/>
 
-    </android.support.design.widget.AppBarLayout>
+    </magicasakura.widgets.TintAppBarLayout>
 
 
     <android.support.v4.view.ViewPager

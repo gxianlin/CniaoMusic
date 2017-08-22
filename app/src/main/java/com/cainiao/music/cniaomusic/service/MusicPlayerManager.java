@@ -322,26 +322,7 @@ public class MusicPlayerManager implements MediaPlayer.OnPreparedListener,
     }
 
 
-    @Override
-    public void onPrepared(MediaPlayer mediaPlayer) {
-        currentMaxDuration = mediaPlayer.getDuration();
-        configMediaPlayerState();
-    }
 
-    @Override
-    public void onCompletion(MediaPlayer mediaPlayer) {
-        Log.d(TAG, "onCompletion from MediaPlayer");
-        if (!mediaPlayer.isLooping()) {
-            // The media player finished playing the current song, so we go ahead and start the next.
-            currentProgress = 0;
-            playNext();
-        }
-    }
-
-    @Override
-    public void onSeekComplete(MediaPlayer mediaPlayer) {
-
-    }
 
     @Override
     public boolean onError(MediaPlayer mediaPlayer, int what, int extra) {
@@ -454,4 +435,24 @@ public class MusicPlayerManager implements MediaPlayer.OnPreparedListener,
     }
 
 
+    @Override
+    public void onPrepared(MediaPlayer mediaPlayer) {
+        currentMaxDuration = mediaPlayer.getDuration();
+        configMediaPlayerState();
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mediaPlayer) {
+        Log.d(TAG, "onCompletion from MediaPlayer");
+        if (!mediaPlayer.isLooping()) {
+            // The media player finished playing the current song, so we go ahead and start the next.
+            currentProgress = 0;
+            playNext();
+        }
+    }
+
+    @Override
+    public void onSeekComplete(MediaPlayer mediaPlayer) {
+
+    }
 }

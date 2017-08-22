@@ -46,16 +46,6 @@ import magicasakura.widgets.TintToolbar;
  */
 public class MainActivity extends SearchActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    //    ImageView mBarNet;
-    //    ImageView mBarMusic;
-    //    ImageView mBarFriends;
-    //    ImageView mBarSearch;
-    //    TintToolbar mToolbar;
-    //    ViewPager mCustomViewpager;
-    //    NavigationView navigationView;
-    //    DrawerLayout mDrawerLayout;
-    //    ImageView mBarMenu;
-
     CircleImageView avatar;
     TextView nicknameTv;
     TextView aboutTv;
@@ -92,6 +82,7 @@ public class MainActivity extends SearchActivity implements NavigationView.OnNav
 
     @Override
     public void initViews() {
+        showQuickControl(true);
         initToolbar();
         initDrawer();
     }

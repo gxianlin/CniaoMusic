@@ -20,6 +20,7 @@ import com.cainiao.music.cniaomusic.data.Song;
 import com.cainiao.music.cniaomusic.service.MusicPlayerManager;
 import com.cainiao.music.cniaomusic.service.OnSongchangeListener;
 import com.cainiao.music.cniaomusic.ui.base.BaseAvtivity;
+import com.cainiao.music.cniaomusic.ui.cnmusic.PlayQueueFragment;
 
 import java.text.DecimalFormat;
 import java.util.concurrent.TimeUnit;
@@ -59,16 +60,11 @@ public class PlayActivity extends BaseAvtivity implements OnSongchangeListener {
     @InjectView(R.id.needle)
     ImageView mNeedle;
 
-    private int index;
     private Song mSong;
-
 
     @Override
     protected void receiveData() {
-        Log.e("tag","onCreate");
-        index = getIntent().getIntExtra("index", 0);
 
-        Log.e("tag", "index=" + index);
     }
 
     @Override
@@ -139,7 +135,7 @@ public class PlayActivity extends BaseAvtivity implements OnSongchangeListener {
     }
 
 
-    @OnClick({R.id.playing_pre, R.id.playing_play, R.id.playing_next})
+    @OnClick({R.id.playing_pre, R.id.playing_play, R.id.playing_next,R.id.playing_playlist})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.playing_pre:
@@ -159,6 +155,16 @@ public class PlayActivity extends BaseAvtivity implements OnSongchangeListener {
                 break;
             case R.id.playing_next:
                 MusicPlayerManager.getInstance().playNext();
+                break;
+            case R.id.playing_playlist:
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        PlayQueueFragment queueFragment = new PlayQueueFragment();
+                        queueFragment.show(getSupportFragmentManager(), "playqueuefragment");
+                    }
+                }, 60);
                 break;
         }
     }
@@ -250,4 +256,5 @@ public class PlayActivity extends BaseAvtivity implements OnSongchangeListener {
     public void onPlayBackStateChanged(PlaybackStateCompat state) {
 
     }
+
 }

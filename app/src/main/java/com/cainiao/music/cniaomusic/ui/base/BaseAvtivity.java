@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 import com.cainiao.music.cniaomusic.R;
 import com.cainiao.music.cniaomusic.service.MusicPlayerManager;
 import com.cainiao.music.cniaomusic.service.MusicServiceHelper;
+import com.cainiao.music.cniaomusic.ui.cnmusic.BottomFragment;
 import com.cainiao.music.cniaomusic.ui.play.PlayActivity;
 
 import butterknife.ButterKnife;
@@ -93,7 +95,7 @@ public abstract class BaseAvtivity extends AppCompatActivity implements View.OnC
      */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        //super.onSaveInstanceState(outState);
+//        super.onSaveInstanceState(outState);
     }
 
     /**
@@ -101,7 +103,7 @@ public abstract class BaseAvtivity extends AppCompatActivity implements View.OnC
      */
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        //super.onRestoreInstanceState(savedInstanceState);
+//        super.onRestoreInstanceState(savedInstanceState);
     }
 
     /**
@@ -175,6 +177,25 @@ public abstract class BaseAvtivity extends AppCompatActivity implements View.OnC
 
     private void unbindService() {
 
+    }
+
+    private BottomFragment fragment; //底部播放控制栏
+    /**
+     * @param show 显示或关闭底部播放控制栏
+     */
+    protected void showQuickControl(boolean show) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        if (show) {
+            if (fragment == null) {
+                fragment = BottomFragment.newInstance();
+                ft.add(R.id.bottom_container, fragment).commitAllowingStateLoss();
+            } else {
+                ft.show(fragment).commitAllowingStateLoss();
+            }
+        } else {
+            if (fragment != null)
+                ft.hide(fragment).commitAllowingStateLoss();
+        }
     }
 
 }

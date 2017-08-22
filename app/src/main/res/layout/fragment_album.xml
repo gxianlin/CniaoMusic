@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
@@ -6,10 +7,14 @@
               tools:context="com.cainiao.music.cniaomusic.ui.album.AlbumFragment">
 
 
-    <com.ilynn.base.PageIndicator
-        android:id="@+id/page_indicator"
+    <magicasakura.widgets.TintToolbar
+        android:id="@+id/tab_layout"
         android:layout_width="match_parent"
-        android:layout_height="45dp"/>
+        android:layout_height="@dimen/tab_height"
+        android:background="@color/white"
+        app:tabIndicatorColor="@color/theme_color_Primary"
+        app:tabSelectedTextColor="@color/theme_color_Primary"
+        app:tabTextColor="@color/black_alpha_more"/>
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
