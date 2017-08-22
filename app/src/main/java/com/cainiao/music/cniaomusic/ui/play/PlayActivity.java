@@ -65,6 +65,7 @@ public class PlayActivity extends BaseAvtivity implements OnSongchangeListener {
 
     @Override
     protected void receiveData() {
+        Log.e("tag","onCreate");
         index = getIntent().getIntExtra("index", 0);
 
         Log.e("tag", "index=" + index);
@@ -196,6 +197,7 @@ public class PlayActivity extends BaseAvtivity implements OnSongchangeListener {
         //歌曲封面
         String coverUrl = mSong.getCoverUrl();
         ImageUtils.GlideWith(this, coverUrl, R.drawable.ah1, mCoverImage);
+//        ImageUtils.GlideWith(Glide.with(this), coverUrl, R.drawable.ah1, mCoverImage);
 
         //设置标题
         if(!TextUtils.isEmpty(mSong.getAlbumName())){
@@ -227,6 +229,7 @@ public class PlayActivity extends BaseAvtivity implements OnSongchangeListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        MusicPlayerManager.getInstance().unregisterListener(this);
     }
 
     public static void open(Context context) {
@@ -237,8 +240,10 @@ public class PlayActivity extends BaseAvtivity implements OnSongchangeListener {
 
     @Override
     public void onSongChanged(Song song) {
+        Log.e("tag","onSongChanged");
         this.mSong = song;
         updateData();
+
     }
 
     @Override

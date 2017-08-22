@@ -1,5 +1,7 @@
 package com.cainiao.music.cniaomusic.music;
 
+import android.util.Log;
+
 import com.cainiao.music.cniaomusic.MusicApplication;
 import com.cainiao.music.cniaomusic.common.utils.ACache;
 import com.cainiao.music.cniaomusic.data.Song;
@@ -39,21 +41,21 @@ public class MusicRecentPlayList {
 
     //歌曲的添加
     public void addPlaySong(Song song) {
-        queue.add(song);
+        queue.add(0,song);
         //
-        for (int i = queue.size() - 1; i > 0; i--) {
+        for (int i=1;i<queue.size();i++){
             //歌曲不能重复
             if (song.getId() == queue.get(i).getId()) {
                 queue.remove(i);
                 break;
             }
-
             //列表最大数(数量限制)
             if (i > RECENT_COUNT) {
                 queue.remove(i);
                 continue;
             }
         }
+
         //添加缓存
         Observable.create(new Observable.OnSubscribe<Object>() {
             @Override
@@ -64,6 +66,7 @@ public class MusicRecentPlayList {
     }
 
     public ArrayList<Song> getQueue() {
+        Log.i("tag","获取历史歌曲列表");
         return queue;
     }
 
@@ -71,6 +74,7 @@ public class MusicRecentPlayList {
      * 将播放列表缓存到文件中,以便下次读取
      */
     private void addQueueToFileCache() {
+        Log.i("tag","添加歌曲缓存");
         ACache.get(MusicApplication.getInstance(), PLAY_QUEUE).put(PLAY_QUEUE, queue);
     }
 

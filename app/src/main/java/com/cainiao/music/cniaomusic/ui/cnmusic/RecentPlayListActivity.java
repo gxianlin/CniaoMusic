@@ -2,7 +2,6 @@ package com.cainiao.music.cniaomusic.ui.cnmusic;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,7 +24,6 @@ import com.lb.materialdesigndialog.base.DialogBase;
 import com.lb.materialdesigndialog.base.DialogWithTitle;
 import com.lb.materialdesigndialog.impl.MaterialDialogNormal;
 
-import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import magicasakura.widgets.TintToolbar;
@@ -138,7 +136,7 @@ public class RecentPlayListActivity extends BaseAvtivity implements OnSongchange
         setSupportActionBar(mToolbar);
         mActionBar = getSupportActionBar();
         mActionBar.setDisplayHomeAsUpEnabled(true);
-        mActionBar.setHomeAsUpIndicator(R.drawable.actionbar_back);
+        mActionBar.setHomeButtonEnabled(true); //设置返回键可用
         mActionBar.setTitle("最近播放");
     }
 
@@ -149,18 +147,17 @@ public class RecentPlayListActivity extends BaseAvtivity implements OnSongchange
     @Override
     public void setListener() {
         MusicPlayerManager.getInstance().registerListener(this);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override
     public void onClick(View v) {
 
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.inject(this);
     }
 
     @OnClick(R.id.btnRight)
@@ -194,5 +191,11 @@ public class RecentPlayListActivity extends BaseAvtivity implements OnSongchange
     @Override
     public void onPlayBackStateChanged(PlaybackStateCompat state) {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MusicPlayerManager.getInstance().unregisterListener(this);
     }
 }

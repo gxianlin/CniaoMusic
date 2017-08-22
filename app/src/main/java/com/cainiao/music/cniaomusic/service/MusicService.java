@@ -78,6 +78,8 @@ public class MusicService extends Service implements OnSongchangeListener{
         //设置回调
         mMediaSession.setCallback(new MediaSessionCallBack());
 
+        MusicPlayerManager.getInstance().registerListener(this);
+
         setState(PlaybackStateCompat.STATE_NONE);
     }
 
@@ -130,6 +132,7 @@ public class MusicService extends Service implements OnSongchangeListener{
 
     public void stopService(){
         stopSelf();
+        MusicPlayerManager.getInstance().unregisterListener(this);
     }
 
     //自定义回调
